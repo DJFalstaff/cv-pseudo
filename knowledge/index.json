@@ -1,0 +1,9 @@
+{
+  "_comment": "Manifest of bundled reference docs. scope: 'core' always loads; 'system' loads only when doc.system matches the active game system; 'module' loads only when doc.module is an installed, active module. Add third-party module docs under modules/ and list them here with scope 'module'. A listed doc whose file is missing is silently skipped, so entries can be staged ahead of their content.",
+  "docs": [
+    { "path": "foundry-basics.md", "title": "Foundry VTT Basics", "scope": "core" },
+    { "path": "systems/dnd5e.md", "title": "D&D 5e (dnd5e system)", "scope": "system", "system": "dnd5e" },
+    { "path": "modules/remote-highlight-ui.md", "title": "Remote Highlight UI", "scope": "module", "module": "remote-highlight-ui" },
+    { "path": "modules/spotlight-omnisearch.md", "title": "Spotlight Omnisearch", "scope": "module", "module": "spotlight-omnisearch" }
+  ]
+}

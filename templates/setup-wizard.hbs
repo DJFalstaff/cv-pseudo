@@ -1,0 +1,69 @@
+{{!-- Pseudo first-run setup: walk the GM through a free API key. --}}
+<div class="cvp-setup-body">
+
+  {{#if success}}
+  <div class="cvp-setup-success">
+    <i class="fa-solid fa-dragon"></i>
+    <h2>{{localize "CVP.Setup.SuccessHeading"}}</h2>
+    <p>{{localize "CVP.Setup.Success"}}</p>
+    <button type="button" class="cvp-primary" data-action="dismiss">
+      {{localize "CVP.Setup.Done"}}
+    </button>
+  </div>
+  {{else}}
+
+  <p class="cvp-setup-intro">{{localize "CVP.Setup.Intro" moduleName=moduleName}}</p>
+
+  <section class="cvp-setup-card">
+    <h3>{{localize "CVP.Setup.ReassureHeading"}}</h3>
+    <ul class="cvp-reassure">
+      <li><i class="fa-solid fa-piggy-bank"></i> {{localize "CVP.Setup.Reassure.Free"}}</li>
+      <li><i class="fa-solid fa-user-shield"></i> {{localize "CVP.Setup.Reassure.Private"}}</li>
+      <li><i class="fa-solid fa-credit-card"></i> {{localize "CVP.Setup.Reassure.NoCard"}}</li>
+    </ul>
+  </section>
+
+  <section class="cvp-setup-card">
+    <h3>{{localize "CVP.Setup.StepsHeading"}}</h3>
+    <ol class="cvp-steps">
+      <li>{{localize "CVP.Setup.Step1"}}</li>
+      <li>{{localize "CVP.Setup.Step2"}}</li>
+      <li>{{localize "CVP.Setup.Step3"}}</li>
+      <li>{{localize "CVP.Setup.Step4"}}</li>
+    </ol>
+    <button type="button" class="cvp-studio" data-action="openStudio">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i> {{localize "CVP.Setup.OpenStudio"}}
+    </button>
+  </section>
+
+  <section class="cvp-setup-card">
+    <label class="cvp-key-label" for="cvp-key-input">{{localize "CVP.Setup.KeyLabel"}}</label>
+    <input id="cvp-key-input" class="cvp-key-input" type="password" autocomplete="off"
+           spellcheck="false" value="{{apiKeyDraft}}" placeholder="{{localize 'CVP.Setup.KeyPlaceholder'}}" />
+
+    <label class="cvp-key-label" for="cvp-model-input">{{localize "CVP.Setup.ModelLabel"}}</label>
+    <input id="cvp-model-input" class="cvp-model-input" type="text" autocomplete="off"
+           spellcheck="false" value="{{model}}" />
+    <p class="cvp-model-hint">{{localize "CVP.Setup.ModelHint"}}</p>
+
+    <div class="cvp-setup-actions">
+      <button type="button" class="cvp-primary" data-action="testAndSave" {{#if testing}}disabled{{/if}}>
+        {{#if testing}}
+        <i class="fa-solid fa-spinner fa-spin"></i> {{localize "CVP.Setup.Testing"}}
+        {{else}}
+        <i class="fa-solid fa-flask"></i> {{localize "CVP.Setup.TestSave"}}
+        {{/if}}
+      </button>
+    </div>
+
+    {{#if errored}}
+    <p class="cvp-setup-error" role="alert"><i class="fa-solid fa-triangle-exclamation"></i> {{message}}</p>
+    {{/if}}
+  </section>
+
+  <div class="cvp-setup-footer">
+    <button type="button" class="cvp-link" data-action="dismiss">{{localize "CVP.Setup.Dismiss"}}</button>
+  </div>
+
+  {{/if}}
+</div>

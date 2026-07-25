@@ -1,0 +1,20 @@
+{{!-- Pseudo diagnostic report: copy or export when getting help. --}}
+<section class="cvp-troubleshooter-body">
+  <p class="cvp-trouble-hint">{{localize "CVP.Trouble.Notes"}}</p>
+  <textarea class="cvp-trouble-output" rows="18" readonly
+            aria-label="{{localize 'CVP.Trouble.OutputLabel'}}">{{report}}</textarea>
+  <footer class="cvp-trouble-footer">
+    <button type="button" class="cvp-primary" data-action="diagnose">
+      <i class="fa-solid fa-dragon"></i> {{localize "CVP.Trouble.Diagnose"}}
+    </button>
+    <button type="button" data-action="copyReport">
+      <i class="fa-solid fa-copy"></i> {{localize "CVP.Trouble.Copy"}}
+    </button>
+    <button type="button" data-action="exportReport">
+      <i class="fa-solid fa-download"></i> {{localize "CVP.Trouble.Export"}}
+    </button>
+    <button type="button" data-action="openDiscord">
+      <i class="fa-brands fa-discord"></i> {{localize "CVP.Trouble.Discord"}}
+    </button>
+  </footer>
+</section>

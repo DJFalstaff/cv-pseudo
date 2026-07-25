@@ -1,0 +1,122 @@
+{{!-- Pseudo's floating chat window. --}}
+<div class="cvp-assistant-body">
+
+  {{#unless configured}}
+  <div class="cvp-notice" role="status">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <span>{{localize "CVP.Assistant.SetupPrompt"}}</span>
+    <button type="button" class="cvp-link" data-action="openSettings">
+      {{localize "CVP.Assistant.OpenSettings"}}
+    </button>
+  </div>
+  {{/unless}}
+
+  <div class="cvp-log">
+    {{#each transcript as |line|}}
+    <div class="cvp-line cvp-line--{{line.role}}">
+      <span class="cvp-speaker">
+        {{#if (eq line.role "gm")}}{{localize "CVP.Assistant.You"}}{{/if}}
+        {{#if (eq line.role "pseudo")}}{{../moduleName}}{{/if}}
+      </span>
+      {{#if line.missingModule}}
+      <div class="cvp-notinstalled">
+        <i class="fa-solid fa-box-open"></i> {{localize "CVP.Assistant.NotInstalled"}}
+        <strong>{{line.missingModule}}</strong>
+      </div>
+      {{/if}}
+      {{#if line.html}}
+      <div class="cvp-text cvp-markdown">{{{line.html}}}</div>
+      {{else}}
+      <div class="cvp-text">{{line.text}}</div>
+      {{/if}}
+      {{#if line.highlightKey}}
+      <button type="button" class="cvp-showme" data-action="showMe" data-key="{{line.highlightKey}}">
+        <i class="fa-solid fa-location-crosshairs"></i> {{localize "CVP.Assistant.ShowMe"}}
+      </button>
+      {{/if}}
+      {{#if line.openUuid}}
+      <button type="button" class="cvp-showme cvp-open" data-action="openDoc" data-uuid="{{line.openUuid}}">
+        <i class="fa-solid fa-up-right-from-square"></i> {{localize "CVP.Assistant.Open"}}
+      </button>
+      {{/if}}
+      {{#if line.macroRun}}
+      <button type="button" class="cvp-showme cvp-macro" data-action="runMacro" data-id="{{line.macroRun.id}}">
+        <i class="fa-solid fa-play"></i> {{localize "CVP.Assistant.RunMacro"}} {{line.macroRun.name}}
+      </button>
+      {{/if}}
+      {{#if line.openOptions.length}}
+      <div class="cvp-open-options">
+        {{#each line.openOptions as |opt|}}
+        <button type="button" class="cvp-showme cvp-open" data-action="openDoc" data-uuid="{{opt.uuid}}">
+          <i class="fa-solid fa-up-right-from-square"></i> {{opt.label}}
+        </button>
+        {{/each}}
+      </div>
+      {{/if}}
+      {{#if line.video}}
+      <div class="cvp-video">
+        <iframe src="https://www.youtube.com/embed/{{line.video.id}}" title="{{line.video.title}}"
+                loading="lazy" allowfullscreen
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+      </div>
+      {{#if line.video.title}}
+      <div class="cvp-video-meta">{{line.video.title}}{{#if line.video.author}} — {{line.video.author}}{{/if}}</div>
+      {{/if}}
+      {{/if}}
+      {{#if line.sources.length}}
+      <div class="cvp-links">
+        {{#each line.sources as |src|}}
+        <a class="cvp-link-item" href="{{src.url}}" target="_blank" rel="noopener noreferrer">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> {{src.title}}
+        </a>
+        {{/each}}
+      </div>
+      {{/if}}
+      {{#if line.stumped}}
+      <div class="cvp-stumped">
+        <i class="fa-solid fa-circle-question"></i>
+        <span>{{localize "CVP.Assistant.Stumped"}}</span>
+        <a href="{{../discordUrl}}" target="_blank" rel="noopener noreferrer">{{localize "CVP.Assistant.Discord"}}</a>
+      </div>
+      {{/if}}
+    </div>
+    {{else}}
+    <div class="cvp-empty">
+      <i class="fa-solid fa-dragon"></i>
+      <p>{{localize "CVP.Assistant.Empty"}}</p>
+    </div>
+    {{/each}}
+
+    {{#if pending}}
+    <div class="cvp-line cvp-line--pseudo">
+      <span class="cvp-speaker">{{moduleName}}</span>
+      <div class="cvp-text cvp-thinking">
+        <span class="cvp-dragon-wrap">
+          <i class="fa-solid fa-dragon cvp-dragon"></i>
+          <span class="cvp-smoke"></span>
+          <span class="cvp-smoke"></span>
+          <span class="cvp-smoke"></span>
+        </span>
+        <span class="cvp-thinking-label">{{thinkingLabel}}</span>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+
+  <div class="cvp-composer">
+    <textarea class="cvp-input" rows="2"
+              placeholder="{{localize 'CVP.Assistant.Placeholder'}}"
+              aria-label="{{localize 'CVP.Assistant.InputLabel'}}"></textarea>
+    {{#if speechSupported}}
+    <button type="button" class="cvp-mic" data-action="mic"
+            aria-label="{{localize 'CVP.Assistant.Mic'}}" data-tooltip="{{localize 'CVP.Assistant.Mic'}}">
+      <i class="fa-solid fa-microphone"></i>
+    </button>
+    {{/if}}
+    <button type="button" class="cvp-send" data-action="send"
+            aria-label="{{localize 'CVP.Assistant.Send'}}" {{#if pending}}disabled{{/if}}>
+      <i class="fa-solid {{#if pending}}fa-spinner fa-spin{{else}}fa-paper-plane{{/if}}"></i>
+    </button>
+  </div>
+
+</div>

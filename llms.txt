@@ -1,0 +1,33 @@
+# Pseudo (cv-pseudo)
+
+Pseudo is an AI assistant for the Game Master — a pseudodragon familiar you summon to name things,
+answer lore and rules questions, and get help running Foundry. It is system-neutral and reads reference
+docs for Foundry, the game system, and installed modules to answer "how do I…" questions.
+
+## Summon Pseudo
+- Press **Alt+A** to open the assistant window; press **Alt+A** again to close it (it toggles).
+- The shortcut is rebindable under **Configure Controls → Keybindings** ("Summon Pseudo").
+- There is also a **Summon Pseudo** button in the Game Settings sidebar tab.
+- Type a question and press **Enter** to send (**Shift+Enter** for a new line). The empty box shows
+  rotating example prompts to suggest what to ask.
+
+## Who can use it
+- Everyone at the table can summon Pseudo. The GM answers directly from their own AI key; players' asks
+  relay over the socket to the GM's client. If no GM is online, players get a "no GM available" message.
+
+## Setup (GM, one time)
+- On first load an unconfigured GM sees the **Meet Pseudo** wizard. It links to Google AI Studio for a
+  free key, then **Test & Save** validates the key (and model) before storing it.
+- Reopen it any time from the **Pseudo Setup** button in the Game Settings sidebar tab.
+- The key is stored only in the GM's browser (a client-scoped setting) and never sent to players.
+- Provider defaults to Google Gemini with model `gemini-flash-latest`; both are editable in settings.
+
+## Window options
+- **Keep assistant on top** (module setting, per user, default on) keeps the window above other windows.
+- The window remembers its last position and size, reopening where you left it.
+
+## Extending Pseudo's knowledge
+- Bundled reference docs live in `cv-pseudo/knowledge/` (a manifest at `knowledge/index.json` maps each
+  doc to the system or module it applies to). Docs load only when their system/module is active.
+- Any module can ship an `llms.txt` at its root; Pseudo reads it automatically for active modules. This
+  file is Pseudo's own example.
