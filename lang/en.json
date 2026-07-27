@@ -8,7 +8,7 @@
   "CVP.Settings.Provider.Choices.Custom": "Custom / Self-hosted",
 
   "CVP.Settings.ApiKey.Name": "API Key",
-  "CVP.Settings.ApiKey.Hint": "Your private key for the selected provider. Stored world-side and only ever sent from a GM's client — players never receive it.",
+  "CVP.Settings.ApiKey.Hint": "Your private key for the selected provider. Stored only in your own browser (not the world) and never synced to players.",
 
   "CVP.Settings.Model.Name": "Model",
   "CVP.Settings.Model.Hint": "The model id to use (e.g. a fast, low-cost model from your provider). Left free-text on purpose so you can point it at the newest model without waiting for an update.",
@@ -58,7 +58,7 @@
 
   "CVP.Assistant.Title": "Pseudo",
   "CVP.Assistant.You": "You",
-  "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world — or type /help to see everything it can do.",
+  "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world — type /help to see everything it can do, or /pseudo to learn about Pseudo itself and its settings.",
   "CVP.Assistant.Placeholder": "Ask Pseudo… (Enter to send, Shift+Enter for a new line)",
   "CVP.Assistant.InputLabel": "Message to Pseudo",
   "CVP.Assistant.ExampleHint": "→ to use this example",

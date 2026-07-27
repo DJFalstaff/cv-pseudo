@@ -64,6 +64,56 @@ const MAX_TRANSCRIPT = 50;
  * alias, since that was the original name before quick questions joined the same catalog. */
 const HELP_COMMAND = /^\/(help|wizards?)$/i;
 
+/** Matches /pseudo — info about the module itself and its settings, not what it can do for you. */
+const PSEUDO_COMMAND = /^\/pseudo$/i;
+
+/**
+ * Build the /pseudo command's answer: what Pseudo is, plus every visible setting and keybinding. Setting
+ * names/hints are read live from Foundry's own settings registry rather than duplicated by hand, so
+ * this can never drift out of sync with what's actually registered. Restricted (GM-only) settings are
+ * only listed for a GM — a player can't see or change them, same as Foundry's own settings sheet.
+ * @returns {string} Markdown.
+ */
+function pseudoAboutText() {
+  const entries = [...game.settings.settings.entries()]
+    .filter(([key, s]) => key.startsWith(`${MODULE_ID}.`) && s.config)
+    .map(([, s]) => ({
+      name: game.i18n.localize(s.name),
+      hint: game.i18n.localize(s.hint),
+      restricted: Boolean(s.restricted)
+    }));
+  const general = entries.filter((e) => !e.restricted);
+  const connection = entries.filter((e) => e.restricted);
+
+  const lines = [
+    `**${MODULE_NAME}** is a system-neutral AI familiar for the GM — it reads your world (journals, ` +
+      "actors, rules, installed modules) to answer questions, look things up, roll dice, spotlight UI, " +
+      "and more. Type `/help` any time to see everything it can walk you through.",
+    "",
+    "**Preferences:**"
+  ];
+  for (const e of general) lines.push(`- **${e.name}** — ${e.hint}`);
+
+  lines.push(
+    "",
+    "**Keybindings** (rebindable under Configure Controls):",
+    "- **Alt+D** — Summon or dismiss Pseudo.",
+    "- **Alt+M** — Toggle the microphone (only while Pseudo is already open)."
+  );
+
+  if (game.user.isGM && connection.length) {
+    lines.push("", "**Connection** (yours only — never sent to players):");
+    for (const e of connection) lines.push(`- **${e.name}** — ${e.hint}`);
+    lines.push(
+      "",
+      "Manage all of this from the **Settings** sidebar tab: **Pseudo Setup** walks you through the " +
+        "connection step by step, and **Pseudo Troubleshooter** helps diagnose anything not working."
+    );
+  }
+
+  return lines.join("\n");
+}
+
 /**
  * The small subset of a registry entry the chat template actually needs to render a launch button —
  * never the `open` function itself, which only ever runs from the action handler.
@@ -528,13 +578,17 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#push("gm", prompt);
     input.value = "";
 
-    // /help is answered locally: the catalog is a fixed, curated list, not something to generate, so
-    // it skips the LLM round trip entirely.
+    // /help and /pseudo are both answered locally — fixed, curated content, not something to
+    // generate, so both skip the LLM round trip entirely.
     if (HELP_COMMAND.test(prompt)) {
       this.#push("pseudo", "Here's everything I can help with:", {
         wizardList: availableWizards().map(wizardBadge),
         quickQuestions: [...ACTIVE_PROMPTS]
       });
+      return;
+    }
+    if (PSEUDO_COMMAND.test(prompt)) {
+      this.#push("pseudo", pseudoAboutText(), { showSettingsButton: true });
       return;
     }
 
@@ -665,7 +719,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       macroRun: meta.macroRun ?? null,
       launchWizard: meta.launchWizard ?? null,
       wizardList: meta.wizardList ?? null,
-      quickQuestions: meta.quickQuestions ?? null
+      quickQuestions: meta.quickQuestions ?? null,
+      showSettingsButton: meta.showSettingsButton ?? false
     });
     if (this.#transcript.length > MAX_TRANSCRIPT) this.#transcript = this.#transcript.slice(-MAX_TRANSCRIPT);
     this.render();

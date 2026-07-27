@@ -70,6 +70,11 @@
         {{/each}}
       </div>
       {{/if}}
+      {{#if line.showSettingsButton}}
+      <button type="button" class="cvp-showme" data-action="openSettings">
+        <i class="fa-solid fa-gear"></i> {{localize "CVP.Assistant.OpenSettings"}}
+      </button>
+      {{/if}}
       {{#if line.openOptions.length}}
       <div class="cvp-open-options">
         {{#each line.openOptions as |opt|}}
