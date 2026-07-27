@@ -43,8 +43,48 @@
   color: var(--cvp-muted);
 }
 .cvp-thinking-label {
+  position: relative;
   font-style: italic;
   font-size: 0.85rem;
+  /* A gradient glint sweeps through the words, like ink catching candlelight. */
+  background: linear-gradient(
+    90deg,
+    var(--cvp-muted) 0%,
+    var(--cvp-muted) 38%,
+    var(--cvp-accent) 50%,
+    var(--cvp-muted) 62%,
+    var(--cvp-muted) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: cvp-thinking-shimmer 2.6s linear infinite;
+}
+@keyframes cvp-thinking-shimmer {
+  0%   { background-position: 220% 0; }
+  100% { background-position: -220% 0; }
+}
+
+/* Two tiny sparkle glints flanking the label — same twinkle-particle idea as the smoke puffs above,
+   just faster and brighter, as a bit of arcane dust rather than dragon's breath. */
+.cvp-thinking-label::before,
+.cvp-thinking-label::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 5px;
+  height: 5px;
+  background: var(--cvp-accent);
+  clip-path: polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+  opacity: 0;
+  animation: cvp-sparkle-twinkle 1.8s ease-in-out infinite;
+}
+.cvp-thinking-label::before { left: -11px; animation-delay: 0.2s; }
+.cvp-thinking-label::after { right: -11px; animation-delay: 0.9s; }
+@keyframes cvp-sparkle-twinkle {
+  0%, 100% { opacity: 0; transform: scale(0.4) rotate(0deg); }
+  50%      { opacity: 1; transform: scale(1) rotate(25deg); }
 }
 
 /* Small looping scene of Pseudo at rest, framed like an inset window rather than blended into the
@@ -103,6 +143,17 @@
 @media (prefers-reduced-motion: reduce) {
   .cvp-dragon { animation: none; }
   .cvp-smoke { animation: none; opacity: 0.4; }
+  .cvp-thinking-label {
+    animation: none;
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--cvp-muted);
+  }
+  .cvp-thinking-label::before,
+  .cvp-thinking-label::after {
+    animation: none;
+    opacity: 0;
+  }
 }
 
 .cvp-send:disabled {
