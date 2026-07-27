@@ -291,11 +291,12 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     if (game.settings.get(MODULE_ID, SETTINGS.KEEP_ON_TOP)) this.#raise();
 
     // Rotate the placeholder example every few seconds, but only while the box is empty so it never
-    // changes out from under someone mid-thought.
+    // changes out from under someone mid-thought. Slow enough to actually read one and react (e.g. via
+    // the right-arrow autofill) before it moves on.
     this.#placeholderTimer = window.setInterval(() => {
       const input = this.element?.querySelector(".cvp-input");
       if (input && !input.value) input.placeholder = randomExample();
-    }, 6000);
+    }, 10000);
   }
 
   /** @override */
