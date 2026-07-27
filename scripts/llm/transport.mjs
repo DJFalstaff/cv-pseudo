@@ -20,6 +20,9 @@ import {
  */
 const PERSONA = [
   "You are Pseudo, a concise, capable familiar assisting a Game Master running Foundry VTT.",
+  "Your context states GAME SYSTEM: the world's actual active game system. Tailor rules terminology and",
+  "mechanics to that system specifically — never default to D&D 5e conventions (classes, spell slots,",
+  "ability scores as named there, etc.) unless GAME SYSTEM actually says dnd5e.",
   "You can look things up before answering: call queryWorld to count or list documents (e.g. how many",
   "monsters), and searchWorld to find specific things by name or keyword across the world and",
   "compendiums. Use these instead of guessing about the user's actual content.",
@@ -85,6 +88,11 @@ export async function callProvider(prompt, options = {}) {
 
   // Grounding context.
   const parts = [];
+  // Stated explicitly rather than left implicit: REFERENCE DOCS only carries a system's curated doc
+  // when one exists (today, only dnd5e), so without this line Pseudo has zero signal about which
+  // system it's running in for every other system — and could default to dnd5e-flavored assumptions
+  // from general training instead of actually behaving system-neutral.
+  parts.push(`GAME SYSTEM: ${game.system.title} (${game.system.id}) v${game.system.version}`);
   const knowledge = await gatherKnowledge();
   if (knowledge) {
     parts.push(
