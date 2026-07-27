@@ -5,6 +5,7 @@
   --cvp-accent: #7c5cff;
   --cvp-accent-ember: #ff7a4d;
   --cvp-accent-jade: #2fbf8f;
+  --cvp-danger: #ff3b3b;
   --cvp-bg: #1c1b22;
   --cvp-panel: #26242e;
   --cvp-text: #e9e7f0;
@@ -177,6 +178,34 @@
   background: color-mix(in srgb, var(--cvp-accent-ember) 18%, var(--cvp-panel));
   border-bottom: 1px solid var(--cvp-border);
   font-size: 0.85rem;
+}
+
+/* Hard-dependency missing/inactive — deliberately louder and redder than .cvp-notice, since this
+   means a feature is silently broken, not just "not set up yet". */
+.cvp-warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  padding: 0.6rem 0.75rem;
+  background: color-mix(in srgb, var(--cvp-danger) 24%, var(--cvp-panel));
+  border-bottom: 2px solid var(--cvp-danger);
+  font-size: 0.85rem;
+}
+.cvp-warning > i {
+  color: var(--cvp-danger);
+  margin-top: 0.15rem;
+}
+.cvp-warning-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.cvp-warning-body ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.cvp-warning-body .cvp-link {
+  align-self: flex-start;
 }
 
 .cvp-link {

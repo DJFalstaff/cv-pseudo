@@ -17,6 +17,18 @@ export const CARTOON_VILLAINS_YOUTUBE = "https://www.youtube.com/@cartoonvillain
 export const CARTOON_VILLAINS_DISCORD = "https://discord.gg/cartoon-villains";
 
 /**
+ * Hard-dependency modules (declared in module.json's "requires") that each back a specific,
+ * GM-visible Pseudo feature — checked so a missing or disabled one is reported clearly instead of
+ * silently degrading. `lib-wrapper` isn't listed here since it has no feature of its own (it's a base
+ * library Remote Highlight UI needs); the Troubleshooter's dependency list still checks it directly.
+ * @type {Array<{id: string, title: string, feature: string}>}
+ */
+export const CRITICAL_DEPENDENCIES = [
+  { id: "spotlight-omnisearch", title: "Spotlight Omnisearch", feature: "searching your world and compendiums" },
+  { id: "remote-highlight-ui", title: "Remote Highlight UI", feature: "spotlighting (\"Show me where\")" }
+];
+
+/**
  * World/client setting keys, unprefixed. The API key is world-scoped and GM-restricted so it saves
  * to the server database and never reaches a player's client. See the security note in the README:
  * `restricted` hides the field and gates access, it does not encrypt the key.

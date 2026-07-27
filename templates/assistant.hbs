@@ -1,6 +1,29 @@
 {{!-- Pseudo's floating chat window. --}}
 <div class="cvp-assistant-body">
 
+  {{#if missingDependencies.length}}
+  <div class="cvp-warning" role="alert">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <div class="cvp-warning-body">
+      <strong>{{localize "CVP.Assistant.DependencyWarningTitle"}}</strong>
+      <ul>
+        {{#each missingDependencies as |dep|}}
+        <li>
+          {{#if dep.installed}}
+          {{localize "CVP.Assistant.DependencyInactive" title=dep.title feature=dep.feature}}
+          {{else}}
+          {{localize "CVP.Assistant.DependencyMissing" title=dep.title feature=dep.feature}}
+          {{/if}}
+        </li>
+        {{/each}}
+      </ul>
+      <button type="button" class="cvp-link" data-action="showMe" data-key="manage-modules">
+        {{localize "CVP.Assistant.ShowMe"}}
+      </button>
+    </div>
+  </div>
+  {{/if}}
+
   {{#unless configured}}
   <div class="cvp-notice" role="status">
     <i class="fa-solid fa-triangle-exclamation"></i>

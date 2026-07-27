@@ -1,11 +1,12 @@
-import { MODULE_ID, MODULE_NAME, CARTOON_VILLAINS_DISCORD, applyColorScheme } from "../constants.mjs";
+import { MODULE_ID, MODULE_NAME, CARTOON_VILLAINS_DISCORD, CRITICAL_DEPENDENCIES, applyColorScheme } from "../constants.mjs";
 import { providerConfig, isConfigured } from "../settings.mjs";
 import { AssistantDialog } from "../assistant/assistant-dialog.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-/** Dependencies whose health Pseudo reports on. */
-const DEPENDENCIES = ["spotlight-omnisearch", "remote-highlight-ui", "lib-wrapper"];
+/** Dependencies whose health Pseudo reports on — the feature-bearing ones plus lib-wrapper, which
+ * has no feature of its own but is still worth surfacing here since it's a hard dependency too. */
+const DEPENDENCIES = [...CRITICAL_DEPENDENCIES.map((d) => d.id), "lib-wrapper"];
 
 /**
  * A diagnostic report dialog: environment, Pseudo's configuration and dependency health, and the

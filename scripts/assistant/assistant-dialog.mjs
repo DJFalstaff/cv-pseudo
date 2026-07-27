@@ -4,6 +4,7 @@ import {
   SETTINGS,
   CARTOON_VILLAINS_YOUTUBE,
   CARTOON_VILLAINS_DISCORD,
+  CRITICAL_DEPENDENCIES,
   applyColorScheme,
   log
 } from "../constants.mjs";
@@ -122,6 +123,20 @@ function pseudoAboutText() {
  */
 function wizardBadge(wizard) {
   return wizard ? { id: wizard.id, title: wizard.title, icon: wizard.icon, description: wizard.description } : null;
+}
+
+/**
+ * Hard-dependency modules that are missing or installed-but-inactive, each with the feature that
+ * breaks without it. GM-only: only a GM can install or enable a module, so a player has no way to
+ * act on this and would just see a warning they can't do anything about.
+ * @returns {Array<{id: string, title: string, feature: string, installed: boolean}>}
+ */
+function missingCriticalDependencies() {
+  if (!game.user.isGM) return [];
+  return CRITICAL_DEPENDENCIES.filter((d) => !game.modules.get(d.id)?.active).map((d) => ({
+    ...d,
+    installed: Boolean(game.modules.get(d.id))
+  }));
 }
 
 /**
@@ -357,6 +372,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     return {
       moduleName: MODULE_NAME,
       configured: game.user.isGM ? isConfigured() : true,
+      missingDependencies: missingCriticalDependencies(),
       transcript: this.#transcript,
       pending: this.#pending,
       thinkingLabel: this.#pendingLabel || game.i18n.localize("CVP.Assistant.Thinking"),
