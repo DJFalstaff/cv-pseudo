@@ -5,7 +5,7 @@ answer lore and rules questions, and get help running Foundry. It is system-neut
 docs for Foundry, the game system, and installed modules to answer "how do I…" questions.
 
 ## Summon Pseudo
-- Press **Alt+A** to open the assistant window; press **Alt+A** again to close it (it toggles).
+- Press **Alt+D** to open the assistant window; press **Alt+D** again to close it (it toggles).
 - The shortcut is rebindable under **Configure Controls → Keybindings** ("Summon Pseudo").
 - There is also a **Summon Pseudo** button in the Game Settings sidebar tab.
 - Type a question and press **Enter** to send (**Shift+Enter** for a new line). The empty box shows

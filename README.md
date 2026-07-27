@@ -30,7 +30,7 @@ their own client with no relay hop.
 Early build (`0.0.1`). What works today:
 
 - Loads on any system; registers client-side settings (provider, API key, model, base URL).
-- **Summon Pseudo** keybinding (default **Alt+A**, rebindable under Configure Controls) and a GM
+- **Summon Pseudo** keybinding (default **Alt+D**, rebindable under Configure Controls) and a GM
   settings-sidebar button.
 - A floating assistant window with a transcript and composer, for GMs and players.
 - **Gemini transport** is wired end to end, including the player→GM socket relay and the

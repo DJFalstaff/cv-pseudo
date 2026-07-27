@@ -38,7 +38,7 @@ question.**
 
 ### 1. Summon it anywhere — one keystroke
 
-Press **Alt+A** and Pseudo's window appears. Press it again and it's gone. Ask anything in plain
+Press **Alt+D** and Pseudo's window appears. Press it again and it's gone. Ask anything in plain
 language. The empty box even suggests things to try, rotating through prompts like *"Name five dive bars
 in a cursed harbor town"* or *"How do I create an NPC?"* The window floats above your sheets, remembers
 where you left it, and stays out of your way.
@@ -130,7 +130,7 @@ Every powerful feature has a guardrail:
 
 ## Signature moments (great beats for the video)
 
-1. **The keystroke.** A GM mid-session hits **Alt+A**; the pseudodragon window puffs into view.
+1. **The keystroke.** A GM mid-session hits **Alt+D**; the pseudodragon window puffs into view.
 2. **The point.** GM types *"How do I add a player?"* — the screen dims and a red spotlight lands on the
    exact button. "*Show me where.*"
 3. **The count.** *"How many monsters do I have?"* → *"865."* The GM leans back, impressed.

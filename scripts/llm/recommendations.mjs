@@ -22,13 +22,22 @@ export const RECOMMENDATIONS = {
       url: "https://foundryvtt.com/packages/bbmm",
       video: "https://youtu.be/-_8gVntKyQY",
       when: "managing, organizing, enabling or disabling modules; module presets/profiles; module tags or notes"
+    },
+    campaignPortable: {
+      title: "Adventure Documents — package and reuse your content",
+      url: "https://foundryvtt.com/article/adventure/",
+      video: "https://youtu.be/vhCpJPTMYXQ",
+      when:
+        "making a campaign or setting portable, packaging or exporting content to share or move between " +
+        "worlds, resetting an adventure back to its original state, Adventure documents/compendiums"
     }
   },
 
-  /** Official getting-started tutorials, linked for general help. */
+  /** Official getting-started tutorials, linked (and now shown) for general help. */
   generalHelp: {
     title: "Foundry VTT Tutorials (official)",
-    url: "https://foundryvtt.com/article/tutorial/"
+    url: "https://foundryvtt.com/article/tutorial/",
+    video: "https://youtu.be/cst7RRv8KHQ"
   }
 };
 
@@ -73,6 +82,11 @@ export function resolveRecommendations(keys, showGeneralHelp) {
     links.push({ title: mod.title, url: mod.url });
     if (mod.video) videos.push({ title: `${mod.title} — video tutorial`, url: mod.video });
   }
-  if (showGeneralHelp) links.push({ title: RECOMMENDATIONS.generalHelp.title, url: RECOMMENDATIONS.generalHelp.url });
+  if (showGeneralHelp) {
+    links.push({ title: RECOMMENDATIONS.generalHelp.title, url: RECOMMENDATIONS.generalHelp.url });
+    if (RECOMMENDATIONS.generalHelp.video) {
+      videos.push({ title: `${RECOMMENDATIONS.generalHelp.title} — video`, url: RECOMMENDATIONS.generalHelp.video });
+    }
+  }
   return { links, videos };
 }

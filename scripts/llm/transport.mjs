@@ -162,18 +162,21 @@ export async function callProvider(prompt, options = {}) {
         args.recommendedModules,
         args.showGeneralHelp
       );
+      // Prefer a webHelp video the model actually chose; otherwise embed the first recommended one
+      // instead of only ever linking it (recommendation videos are curated, real URLs too).
+      const videoUrl = args.videoUrl || recommendedVideos[0]?.url || "";
+      // Any recommended video that ISN'T the one embedded still needs to surface somewhere — as a
+      // link, so multiple video recommendations at once never silently vanish.
+      const leftoverVideoLinks = recommendedVideos.filter((v) => v.url !== videoUrl);
       const webSources = collectedSources.length
         ? [{ title: "CartoonVillains on YouTube", url: CARTOON_VILLAINS_YOUTUBE }, ...collectedSources]
         : [];
-      for (const source of [...recommendedLinks, ...webSources]) {
+      for (const source of [...recommendedLinks, ...leftoverVideoLinks, ...webSources]) {
         if (!source.url || seen.has(source.url)) continue;
         seen.add(source.url);
         sources.push(source);
         if (sources.length >= 8) break;
       }
-      // Prefer a webHelp video the model actually chose; otherwise embed the first recommended one
-      // instead of only ever linking it (recommendation videos are curated, real URLs too).
-      const videoUrl = args.videoUrl || recommendedVideos[0]?.url || "";
       return {
         answer: args.answer || "",
         highlightKey: args.highlightKey,

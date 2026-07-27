@@ -8,7 +8,7 @@ import { Troubleshooter } from "./setup/troubleshooter.mjs";
 import { captureSelector, highlightByKey } from "./ui/highlight.mjs";
 
 /**
- * Register the "Summon Pseudo" keybinding. Available to everyone (default Alt+A): the GM answers from
+ * Register the "Summon Pseudo" keybinding. Available to everyone (default Alt+D): the GM answers from
  * their own key, players relay to the GM. It is a rebindable setting — players change it under
  * Configure Controls → Keybindings; the `editable` entry below is only the default.
  * @returns {void}
@@ -17,7 +17,7 @@ function registerKeybindings() {
   game.keybindings.register(MODULE_ID, "summon", {
     name: "CVP.Keybindings.Summon.Name",
     hint: "CVP.Keybindings.Summon.Hint",
-    editable: [{ key: "KeyA", modifiers: ["Alt"] }],
+    editable: [{ key: "KeyD", modifiers: ["Alt"] }],
     onDown: () => {
       AssistantDialog.toggle();
       return true;
