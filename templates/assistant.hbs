@@ -44,10 +44,22 @@
         <i class="fa-solid fa-play"></i> {{localize "CVP.Assistant.RunMacro"}} {{line.macroRun.name}}
       </button>
       {{/if}}
-      {{#if line.launchPortabilityWizard}}
-      <button type="button" class="cvp-showme cvp-wizard-launch" data-action="launchPortabilityWizard">
-        <i class="fa-solid fa-box-archive"></i> {{localize "CVP.Assistant.LaunchPortabilityWizard"}}
+      {{#if line.launchWizard}}
+      <button type="button" class="cvp-showme cvp-wizard-launch" data-action="launchWizard" data-wizard-id="{{line.launchWizard.id}}">
+        <i class="fa-solid {{line.launchWizard.icon}}"></i> {{line.launchWizard.title}}
       </button>
+      {{/if}}
+      {{#if line.wizardList.length}}
+      <div class="cvp-wizard-catalog">
+        {{#each line.wizardList as |wiz|}}
+        <div class="cvp-wizard-catalog-item">
+          <button type="button" class="cvp-showme cvp-wizard-launch" data-action="launchWizard" data-wizard-id="{{wiz.id}}">
+            <i class="fa-solid {{wiz.icon}}"></i> {{wiz.title}}
+          </button>
+          <p class="cvp-wizard-catalog-desc">{{wiz.description}}</p>
+        </div>
+        {{/each}}
+      </div>
       {{/if}}
       {{#if line.openOptions.length}}
       <div class="cvp-open-options">

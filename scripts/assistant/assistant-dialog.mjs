@@ -13,7 +13,7 @@ import { NoGMError } from "../llm/relay.mjs";
 import { highlightByKey } from "../ui/highlight.mjs";
 import { openByUuid } from "../ui/open-document.mjs";
 import { rollDice, rollTableById, runMacroById } from "../ui/actions.mjs";
-import { CampaignPortableWizard } from "../wizards/campaign-portable-wizard.mjs";
+import { getWizard, availableWizards } from "../wizards/registry.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -59,6 +59,19 @@ function randomExample() {
 
 /** Cap on transcript lines kept in view, so a long session doesn't grow the DOM unbounded. */
 const MAX_TRANSCRIPT = 50;
+
+/** Matches the /wizards command (and the singular /wizard), handled locally — no LLM round trip. */
+const WIZARDS_COMMAND = /^\/wizards?$/i;
+
+/**
+ * The small subset of a registry entry the chat template actually needs to render a launch button —
+ * never the `open` function itself, which only ever runs from the action handler.
+ * @param {?object} wizard A registry.mjs entry, or null.
+ * @returns {?{id: string, title: string, icon: string, description: string}}
+ */
+function wizardBadge(wizard) {
+  return wizard ? { id: wizard.id, title: wizard.title, icon: wizard.icon, description: wizard.description } : null;
+}
 
 /**
  * Extract a YouTube video id from a URL, or null. Only used to build a youtube.com/embed src, so a
@@ -215,7 +228,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       openDoc: AssistantDialog.#onOpenDoc,
       runMacro: AssistantDialog.#onRunMacro,
       mic: AssistantDialog.#onMic,
-      launchPortabilityWizard: AssistantDialog.#onLaunchPortabilityWizard
+      launchWizard: AssistantDialog.#onLaunchWizard
     }
   };
 
@@ -466,9 +479,16 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#toggleDictation();
   }
 
-  /** @this {AssistantDialog} */
-  static #onLaunchPortabilityWizard() {
-    CampaignPortableWizard.open();
+  /**
+   * Launch a curated wizard by id — shared by the contextual recommendation button and the /wizards
+   * catalog, both of which just need to say which one was clicked.
+   * @this {AssistantDialog}
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} target The clicked launch button.
+   */
+  static #onLaunchWizard(_event, target) {
+    const id = target?.dataset?.wizardId;
+    getWizard(id)?.open();
   }
 
   /* -------------------------------------------- */
@@ -489,6 +509,18 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
 
     this.#push("gm", prompt);
     input.value = "";
+
+    // /wizards is answered locally: the catalog is a fixed, curated list, not something to generate,
+    // so it skips the LLM round trip entirely.
+    if (WIZARDS_COMMAND.test(prompt)) {
+      const wizards = availableWizards().map(wizardBadge);
+      const text = wizards.length
+        ? "Here's everything I can walk you through step by step:"
+        : "Nothing to walk you through yet — check back after an update.";
+      this.#push("pseudo", text, { wizardList: wizards });
+      return;
+    }
+
     this.#pending = true;
     this.#pendingLabel = null;
     this.render(); // show the thinking indicator while we wait
@@ -524,7 +556,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       const macroId = structured ? reply.runMacroId : null;
       const macro = macroId && game.user.isGM ? game.macros.get(macroId) : null;
       const macroRun = macro ? { id: macro.id, name: macro.name } : null;
-      const launchPortabilityWizard = structured ? Boolean(reply.launchPortabilityWizard) : false;
+      const launchWizard = structured && reply.launchWizardId ? wizardBadge(getWizard(reply.launchWizardId)) : null;
       // Real, Google-verified sources supplied by the transport (never model-typed URLs).
       const sources =
         structured && Array.isArray(reply.sources)
@@ -546,7 +578,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
         sources,
         stumped,
         macroRun,
-        launchPortabilityWizard
+        launchWizard
       });
       // Spotlight the referenced element right away; the "Show me" button re-triggers it later.
       if (highlightKey) this.#spotlight(highlightKey);
@@ -614,7 +646,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       sources: meta.sources ?? null,
       stumped: meta.stumped ?? false,
       macroRun: meta.macroRun ?? null,
-      launchPortabilityWizard: meta.launchPortabilityWizard ?? false
+      launchWizard: meta.launchWizard ?? null,
+      wizardList: meta.wizardList ?? null
     });
     if (this.#transcript.length > MAX_TRANSCRIPT) this.#transcript = this.#transcript.slice(-MAX_TRANSCRIPT);
     this.render();

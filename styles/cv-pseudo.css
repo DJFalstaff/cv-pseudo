@@ -340,7 +340,7 @@
   color: var(--cvp-accent-ember);
 }
 
-/* Launch-the-portability-wizard button — jade, so it stands out from routine chat actions. */
+/* Launch-a-curated-wizard button — jade, so it stands out from routine chat actions. */
 .cvp-wizard-launch {
   border-color: color-mix(in srgb, var(--cvp-accent-jade) 55%, var(--cvp-border));
   background: color-mix(in srgb, var(--cvp-accent-jade) 20%, var(--cvp-panel));
@@ -351,6 +351,25 @@
 }
 .cvp-wizard-launch i {
   color: var(--cvp-accent-jade);
+}
+
+/* The /wizards catalog — one entry per curated wizard, each with its launch button and a blurb. */
+.cvp-wizard-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.3rem;
+}
+.cvp-wizard-catalog-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+}
+.cvp-wizard-catalog-desc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--cvp-muted);
 }
 
 .cvp-open-options {
