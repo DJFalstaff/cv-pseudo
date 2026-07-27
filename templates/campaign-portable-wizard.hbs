@@ -76,6 +76,11 @@
   {{#if isAdventure}}
   <div class="cvp-wizard-step cvp-wizard-adventure">
     <h2>Build the Adventure</h2>
+    <p>
+      This is where your campaign actually becomes something packageable — a real Foundry
+      <strong>Adventure</strong> document that holds the content. Nothing gets bundled unless you
+      create it here; the rest of the wizard has nothing to work with until you do.
+    </p>
     <div class="form-group">
       <label>Campaign name</label>
       <input type="text" class="cvp-wizard-campaign-name" value="{{campaignName}}">
@@ -86,6 +91,7 @@
     <button type="button" data-action="createAdventure" class="cvp-wizard-btn cvp-wizard-btn--primary" {{#if creatingAdventure}}disabled{{/if}}>
       {{#if creatingAdventure}}Creating…{{else}}Create Adventure{{/if}}
     </button>
+    <p class="cvp-wizard-hint">Clicking Next without doing this skips the step — you'll be asked to confirm first.</p>
     {{else}}
     <p>
       <strong>"{{adventureName}}"</strong> created — {{adventureSummary}}. Foundry's own Adventure

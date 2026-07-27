@@ -359,18 +359,38 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   /* -------------------------------------------- */
 
   /** @this {CampaignPortableWizard} */
-  static #onNext() {
+  static async #onNext() {
     if (this.#step === "select") {
       const checked = this.element.querySelectorAll('input[name="campaignTag"]:checked');
       this.#selectedTags = new Set([...checked].map((el) => el.value));
     } else if (this.#step === "adventure") {
       const nameInput = this.element.querySelector(".cvp-wizard-campaign-name");
       if (nameInput?.value?.trim()) this.#campaignName = nameInput.value.trim();
+      if (!this.#adventure && !(await this.#confirmSkipAdventure())) return;
     } else if (this.#step === "module") {
       this.#captureModuleId();
     }
     this.#stepIndex = Math.min(this.#stepIndex + 1, STEPS.length - 1);
     this.render();
+  }
+
+  /**
+   * Warn before leaving the Build the Adventure step without actually creating one — Next otherwise
+   * advances silently, and it's easy to not notice you skipped the step where content gets packaged.
+   * @this {CampaignPortableWizard}
+   * @returns {Promise<boolean>} True if the GM chose to skip anyway.
+   */
+  async #confirmSkipAdventure() {
+    const { DialogV2 } = foundry.applications.api;
+    return DialogV2.confirm({
+      window: { title: "Skip Building the Adventure?", icon: "fa-solid fa-triangle-exclamation" },
+      content:
+        "<p>You haven't created the Adventure yet — this is the step where your campaign's actual " +
+        "content gets packaged. Skip it now and the next steps will have nothing to work with.</p>" +
+        "<p>You can always come back to this step later.</p>",
+      yes: { label: "Skip anyway" },
+      no: { label: "Go back and create it", default: true }
+    }).catch(() => false);
   }
 
   /** @this {CampaignPortableWizard} */
