@@ -22,6 +22,9 @@
   "CVP.Settings.KeepOnTop.Name": "Keep assistant on top",
   "CVP.Settings.KeepOnTop.Hint": "Keep Pseudo's window above your other windows so it stays visible while you work. Turn off if you'd rather it sit in the normal window stack.",
 
+  "CVP.Settings.ExampleAutofill.Name": "Right-arrow to use example",
+  "CVP.Settings.ExampleAutofill.Hint": "While the message box is empty, press → (right arrow) to fill it with the example prompt currently shown. Turn off if you'd rather → just behave like a normal empty text box.",
+
   "CVP.Setup.Title": "Meet Pseudo",
   "CVP.Setup.Intro": "{moduleName} is your pseudodragon familiar — a small AI helper that reads your world to name things, answer lore and rules questions, and lend a hand while you run the game. To wake it up, it needs a free key from Google AI Studio. It takes about two minutes, and you only do this once.",
   "CVP.Setup.ReassureHeading": "The reassuring bits first",
@@ -55,6 +58,7 @@
   "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world.",
   "CVP.Assistant.Placeholder": "Ask Pseudo… (Enter to send, Shift+Enter for a new line)",
   "CVP.Assistant.InputLabel": "Message to Pseudo",
+  "CVP.Assistant.ExampleHint": "→ to use this example",
   "CVP.Assistant.Send": "Send",
   "CVP.Assistant.Mic": "Dictate (voice to text)",
   "CVP.Assistant.NoSpeech": "Voice input isn't available in this browser.",

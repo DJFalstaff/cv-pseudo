@@ -118,5 +118,8 @@
       <i class="fa-solid {{#if pending}}fa-spinner fa-spin{{else}}fa-paper-plane{{/if}}"></i>
     </button>
   </div>
+  {{#if exampleAutofillEnabled}}
+  <div class="cvp-example-hint">{{localize "CVP.Assistant.ExampleHint"}}</div>
+  {{/if}}
 
 </div>

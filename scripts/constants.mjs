@@ -37,7 +37,9 @@ export const SETTINGS = {
   /** Last {top,left,width,height} of the assistant window, restored on next summon. */
   WINDOW_POSITION: "windowPosition",
   /** Set once the GM answers the "tune Omnisearch for best results" prompt. */
-  OMNISEARCH_DISMISSED: "omnisearchDismissed"
+  OMNISEARCH_DISMISSED: "omnisearchDismissed",
+  /** Press → in the empty input to fill it with the shown example prompt. Per-user UI preference. */
+  EXAMPLE_AUTOFILL: "exampleAutofill"
 };
 
 /**

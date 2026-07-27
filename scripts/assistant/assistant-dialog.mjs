@@ -270,6 +270,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       pending: this.#pending,
       thinkingLabel: this.#pendingLabel || game.i18n.localize("CVP.Assistant.Thinking"),
       speechSupported: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition),
+      exampleAutofillEnabled: game.settings.get(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL),
       discordUrl: CARTOON_VILLAINS_DISCORD,
       channelUrl: CARTOON_VILLAINS_YOUTUBE
     };
@@ -304,6 +305,15 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
         if (event.key === "Enter" && !event.shiftKey) {
           event.preventDefault();
           this.#ask();
+        } else if (
+          event.key === "ArrowRight" &&
+          !input.value &&
+          game.settings.get(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL)
+        ) {
+          // Empty box only, so this never hijacks normal cursor movement while typing.
+          event.preventDefault();
+          input.value = input.placeholder;
+          input.setSelectionRange(input.value.length, input.value.length);
         }
       });
       input.focus();

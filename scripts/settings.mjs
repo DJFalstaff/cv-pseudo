@@ -80,6 +80,15 @@ export function registerSettings() {
     config: false,
     type: new BooleanField({ initial: false })
   });
+
+  // Per-user UI preference, so it is NOT restricted — players use the assistant window too.
+  game.settings.register(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL, {
+    name: "CVP.Settings.ExampleAutofill.Name",
+    hint: "CVP.Settings.ExampleAutofill.Hint",
+    scope: "client",
+    config: true,
+    type: new BooleanField({ initial: true })
+  });
 }
 
 /**
