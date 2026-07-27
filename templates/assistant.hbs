@@ -91,12 +91,17 @@
     <div class="cvp-line cvp-line--pseudo">
       <span class="cvp-speaker">{{moduleName}}</span>
       <div class="cvp-text cvp-thinking">
+        {{#if showThinkingVideo}}
+        <video class="cvp-thinking-video" src="modules/{{moduleId}}/assets/pseudodragon.webm"
+               autoplay loop muted playsinline></video>
+        {{else}}
         <span class="cvp-dragon-wrap">
           <i class="fa-solid fa-dragon cvp-dragon"></i>
           <span class="cvp-smoke"></span>
           <span class="cvp-smoke"></span>
           <span class="cvp-smoke"></span>
         </span>
+        {{/if}}
         <span class="cvp-thinking-label">{{thinkingLabel}}</span>
       </div>
     </div>

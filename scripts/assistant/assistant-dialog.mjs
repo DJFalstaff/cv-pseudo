@@ -166,6 +166,9 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {?SpeechRecognition} Active speech-recognition session, if dictating. */
   #recognition = null;
 
+  /** @type {boolean} True once the thinking-indicator video has failed to load, so we stop retrying it. */
+  #videoFailed = false;
+
   /**
    * Document-level pointerdown handler backing "keep on top": when the user clicks another window,
    * re-raise this one above it. Stored as a bound field so it can be removed on close.
@@ -271,6 +274,9 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       thinkingLabel: this.#pendingLabel || game.i18n.localize("CVP.Assistant.Thinking"),
       speechSupported: Boolean(window.SpeechRecognition || window.webkitSpeechRecognition),
       exampleAutofillEnabled: game.settings.get(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL),
+      moduleId: MODULE_ID,
+      showThinkingVideo:
+        !this.#videoFailed && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       discordUrl: CARTOON_VILLAINS_DISCORD,
       channelUrl: CARTOON_VILLAINS_YOUTUBE
     };
@@ -318,6 +324,24 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       });
       input.focus();
     }
+
+    // If the thinking-indicator video can't load (blocked, missing, unsupported codec), fall back to
+    // the CSS dragon animation instead of leaving a broken video box. Persisted on the instance so the
+    // fallback sticks across the many re-renders a single "thinking" period triggers.
+    const video = this.element.querySelector(".cvp-thinking-video");
+    if (video) {
+      video.addEventListener(
+        "error",
+        () => {
+          if (!this.#videoFailed) {
+            this.#videoFailed = true;
+            this.render();
+          }
+        },
+        { once: true }
+      );
+    }
+
     this.#scrollToEnd();
   }
 

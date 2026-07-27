@@ -47,6 +47,18 @@
   font-size: 0.85rem;
 }
 
+/* Small looping scene of Pseudo at rest, framed like an inset window rather than blended into the
+   background (the source footage has no transparency — a full library scene, not a flat icon). */
+.cvp-thinking-video {
+  width: 96px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--cvp-border);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  flex: none;
+}
+
 .cvp-dragon-wrap {
   position: relative;
   display: inline-block;
