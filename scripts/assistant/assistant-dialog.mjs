@@ -13,6 +13,7 @@ import { NoGMError } from "../llm/relay.mjs";
 import { highlightByKey } from "../ui/highlight.mjs";
 import { openByUuid } from "../ui/open-document.mjs";
 import { rollDice, rollTableById, runMacroById } from "../ui/actions.mjs";
+import { CampaignPortableWizard } from "../wizards/campaign-portable-wizard.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -213,7 +214,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       showMe: AssistantDialog.#onShowMe,
       openDoc: AssistantDialog.#onOpenDoc,
       runMacro: AssistantDialog.#onRunMacro,
-      mic: AssistantDialog.#onMic
+      mic: AssistantDialog.#onMic,
+      launchPortabilityWizard: AssistantDialog.#onLaunchPortabilityWizard
     }
   };
 
@@ -464,6 +466,11 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#toggleDictation();
   }
 
+  /** @this {AssistantDialog} */
+  static #onLaunchPortabilityWizard() {
+    CampaignPortableWizard.open();
+  }
+
   /* -------------------------------------------- */
   /*  Internals                                   */
   /* -------------------------------------------- */
@@ -517,6 +524,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       const macroId = structured ? reply.runMacroId : null;
       const macro = macroId && game.user.isGM ? game.macros.get(macroId) : null;
       const macroRun = macro ? { id: macro.id, name: macro.name } : null;
+      const launchPortabilityWizard = structured ? Boolean(reply.launchPortabilityWizard) : false;
       // Real, Google-verified sources supplied by the transport (never model-typed URLs).
       const sources =
         structured && Array.isArray(reply.sources)
@@ -537,7 +545,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
         video,
         sources,
         stumped,
-        macroRun
+        macroRun,
+        launchPortabilityWizard
       });
       // Spotlight the referenced element right away; the "Show me" button re-triggers it later.
       if (highlightKey) this.#spotlight(highlightKey);
@@ -604,7 +613,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       video: meta.video ?? null,
       sources: meta.sources ?? null,
       stumped: meta.stumped ?? false,
-      macroRun: meta.macroRun ?? null
+      macroRun: meta.macroRun ?? null,
+      launchPortabilityWizard: meta.launchPortabilityWizard ?? false
     });
     if (this.#transcript.length > MAX_TRANSCRIPT) this.#transcript = this.#transcript.slice(-MAX_TRANSCRIPT);
     this.render();

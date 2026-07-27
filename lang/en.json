@@ -70,6 +70,9 @@
   "CVP.Assistant.ShowMe": "Show me where",
   "CVP.Assistant.Open": "Open",
   "CVP.Assistant.RunMacro": "Run macro:",
+  "CVP.Assistant.LaunchPortabilityWizard": "Make this campaign portable",
+
+  "CVP.Portability.Title": "Make Your Campaign Portable",
   "CVP.Assistant.Stumped": "Still stuck? Try the",
   "CVP.Assistant.Discord": "CartoonVillains Discord",
   "CVP.Assistant.Thinking": "Pseudodragon is thinking…",

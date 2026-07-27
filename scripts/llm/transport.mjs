@@ -3,7 +3,7 @@ import { gatherKnowledge } from "../knowledge/loader.mjs";
 import { loadUiMap, highlightTargets } from "../ui/highlight.mjs";
 import { geminiRequest, geminiGroundedSearch } from "./providers/gemini.mjs";
 import { CARTOON_VILLAINS_YOUTUBE } from "../constants.mjs";
-import { recommendationContext, resolveRecommendations } from "./recommendations.mjs";
+import { recommendationContext, resolveRecommendations, CAMPAIGN_PORTABLE_KEY } from "./recommendations.mjs";
 import {
   QUERY_WORLD_DECL,
   SEARCH_WORLD_DECL,
@@ -184,6 +184,9 @@ export async function callProvider(prompt, options = {}) {
         openUuid: args.openUuid,
         openOptions: Array.isArray(args.openOptions) ? args.openOptions : null,
         videoUrl,
+        // The GM-only launch button for the Campaign Portability Wizard, offered whenever that
+        // recommendation applies (players never get it — it's a world-authoring action).
+        launchPortabilityWizard: game.user.isGM && Boolean(args.recommendedModules?.includes(CAMPAIGN_PORTABLE_KEY)),
         sources: sources.length ? sources : null,
         stumped: Boolean(args.stumped),
         rollFormula: args.rollFormula,

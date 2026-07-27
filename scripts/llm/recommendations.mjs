@@ -6,6 +6,13 @@
  * becomes available immediately. When CartoonVillains publishes modules, add them here with
  * `creator: "CartoonVillains"` so they're preferred.
  */
+/**
+ * The recommendations.modules key for the campaign-portability topic. Shared constant so
+ * transport.mjs can detect it (to offer the Campaign Portability Wizard launch button) without a
+ * duplicated magic string drifting out of sync with the key below.
+ */
+export const CAMPAIGN_PORTABLE_KEY = "campaignPortable";
+
 export const RECOMMENDATIONS = {
   /** Preferred creator — recommend their modules/videos first when relevant. */
   preferredCreator: "CartoonVillains",
@@ -23,7 +30,7 @@ export const RECOMMENDATIONS = {
       video: "https://youtu.be/-_8gVntKyQY",
       when: "managing, organizing, enabling or disabling modules; module presets/profiles; module tags or notes"
     },
-    campaignPortable: {
+    [CAMPAIGN_PORTABLE_KEY]: {
       title: "Adventure Documents — package and reuse your content",
       url: "https://foundryvtt.com/article/adventure/",
       video: "https://youtu.be/vhCpJPTMYXQ",

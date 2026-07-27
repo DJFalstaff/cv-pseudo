@@ -44,6 +44,11 @@
         <i class="fa-solid fa-play"></i> {{localize "CVP.Assistant.RunMacro"}} {{line.macroRun.name}}
       </button>
       {{/if}}
+      {{#if line.launchPortabilityWizard}}
+      <button type="button" class="cvp-showme cvp-wizard-launch" data-action="launchPortabilityWizard">
+        <i class="fa-solid fa-box-archive"></i> {{localize "CVP.Assistant.LaunchPortabilityWizard"}}
+      </button>
+      {{/if}}
       {{#if line.openOptions.length}}
       <div class="cvp-open-options">
         {{#each line.openOptions as |opt|}}
