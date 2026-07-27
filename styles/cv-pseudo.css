@@ -353,7 +353,7 @@
   color: var(--cvp-accent-jade);
 }
 
-/* The /wizards catalog — one entry per curated wizard, each with its launch button and a blurb. */
+/* The /help catalog's wizard section — one entry per curated wizard, its launch button and a blurb. */
 .cvp-wizard-catalog {
   display: flex;
   flex-direction: column;
@@ -370,6 +370,21 @@
   margin: 0;
   font-size: 0.8rem;
   color: var(--cvp-muted);
+}
+
+/* The /help catalog's quick-questions section — one button per example prompt; asks it on click. */
+.cvp-quick-questions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+.cvp-quick-question {
+  display: block;
+  width: 100%;
+  text-align: left;
+  white-space: normal;
+  line-height: 1.3;
 }
 
 .cvp-open-options {

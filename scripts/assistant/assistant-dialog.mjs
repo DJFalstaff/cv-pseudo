@@ -60,8 +60,9 @@ function randomExample() {
 /** Cap on transcript lines kept in view, so a long session doesn't grow the DOM unbounded. */
 const MAX_TRANSCRIPT = 50;
 
-/** Matches the /wizards command (and the singular /wizard), handled locally — no LLM round trip. */
-const WIZARDS_COMMAND = /^\/wizards?$/i;
+/** Matches /help — the catalog of everything Pseudo can do. /wizards(/wizard) still works as an
+ * alias, since that was the original name before quick questions joined the same catalog. */
+const HELP_COMMAND = /^\/(help|wizards?)$/i;
 
 /**
  * The small subset of a registry entry the chat template actually needs to render a launch button —
@@ -228,7 +229,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       openDoc: AssistantDialog.#onOpenDoc,
       runMacro: AssistantDialog.#onRunMacro,
       mic: AssistantDialog.#onMic,
-      launchWizard: AssistantDialog.#onLaunchWizard
+      launchWizard: AssistantDialog.#onLaunchWizard,
+      askExample: AssistantDialog.#onAskExample
     }
   };
 
@@ -491,6 +493,22 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     getWizard(id)?.open();
   }
 
+  /**
+   * Ask a /help quick-question button immediately, rather than just staging it in the input — it's a
+   * real question meant to be answered, not a draft to edit first, matching how the wizard-launch
+   * buttons already act on click instead of requiring a separate confirm step.
+   * @this {AssistantDialog}
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} target The clicked quick-question button.
+   */
+  static #onAskExample(_event, target) {
+    const prompt = target?.dataset?.prompt;
+    const input = this.element.querySelector(".cvp-input");
+    if (!prompt || !input) return;
+    input.value = prompt;
+    this.#ask();
+  }
+
   /* -------------------------------------------- */
   /*  Internals                                   */
   /* -------------------------------------------- */
@@ -510,14 +528,13 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     this.#push("gm", prompt);
     input.value = "";
 
-    // /wizards is answered locally: the catalog is a fixed, curated list, not something to generate,
-    // so it skips the LLM round trip entirely.
-    if (WIZARDS_COMMAND.test(prompt)) {
-      const wizards = availableWizards().map(wizardBadge);
-      const text = wizards.length
-        ? "Here's everything I can walk you through step by step:"
-        : "Nothing to walk you through yet — check back after an update.";
-      this.#push("pseudo", text, { wizardList: wizards });
+    // /help is answered locally: the catalog is a fixed, curated list, not something to generate, so
+    // it skips the LLM round trip entirely.
+    if (HELP_COMMAND.test(prompt)) {
+      this.#push("pseudo", "Here's everything I can help with:", {
+        wizardList: availableWizards().map(wizardBadge),
+        quickQuestions: [...ACTIVE_PROMPTS]
+      });
       return;
     }
 
@@ -647,7 +664,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       stumped: meta.stumped ?? false,
       macroRun: meta.macroRun ?? null,
       launchWizard: meta.launchWizard ?? null,
-      wizardList: meta.wizardList ?? null
+      wizardList: meta.wizardList ?? null,
+      quickQuestions: meta.quickQuestions ?? null
     });
     if (this.#transcript.length > MAX_TRANSCRIPT) this.#transcript = this.#transcript.slice(-MAX_TRANSCRIPT);
     this.render();

@@ -61,6 +61,15 @@
         {{/each}}
       </div>
       {{/if}}
+      {{#if line.quickQuestions.length}}
+      <div class="cvp-quick-questions">
+        {{#each line.quickQuestions as |q|}}
+        <button type="button" class="cvp-showme cvp-quick-question" data-action="askExample" data-prompt="{{q}}">
+          {{q}}
+        </button>
+        {{/each}}
+      </div>
+      {{/if}}
       {{#if line.openOptions.length}}
       <div class="cvp-open-options">
         {{#each line.openOptions as |opt|}}

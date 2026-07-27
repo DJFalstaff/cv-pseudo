@@ -58,7 +58,7 @@
 
   "CVP.Assistant.Title": "Pseudo",
   "CVP.Assistant.You": "You",
-  "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world — or type /wizards to see everything it can walk you through step by step.",
+  "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world — or type /help to see everything it can do.",
   "CVP.Assistant.Placeholder": "Ask Pseudo… (Enter to send, Shift+Enter for a new line)",
   "CVP.Assistant.InputLabel": "Message to Pseudo",
   "CVP.Assistant.ExampleHint": "→ to use this example",
