@@ -57,19 +57,22 @@ export function recommendationContext() {
 }
 
 /**
- * Resolve model-selected recommendation keys (and the general-help flag) to real {title, url} links.
+ * Resolve model-selected recommendation keys (and the general-help flag) to real links and videos.
+ * Split so a recommendation's video can be embedded (like a webHelp video) instead of only ever
+ * appearing as a clickable link — both are real, curated URLs, never model-typed.
  * @param {string[]} keys Module keys the model chose.
  * @param {boolean} showGeneralHelp Whether to include the tutorials link.
- * @returns {Array<{title: string, url: string}>}
+ * @returns {{links: Array<{title: string, url: string}>, videos: Array<{title: string, url: string}>}}
  */
 export function resolveRecommendations(keys, showGeneralHelp) {
-  const out = [];
+  const links = [];
+  const videos = [];
   for (const key of keys || []) {
     const mod = RECOMMENDATIONS.modules[key];
     if (!mod) continue;
-    out.push({ title: mod.title, url: mod.url });
-    if (mod.video) out.push({ title: `${mod.title} — video tutorial`, url: mod.video });
+    links.push({ title: mod.title, url: mod.url });
+    if (mod.video) videos.push({ title: `${mod.title} — video tutorial`, url: mod.video });
   }
-  if (showGeneralHelp) out.push({ title: RECOMMENDATIONS.generalHelp.title, url: RECOMMENDATIONS.generalHelp.url });
-  return out;
+  if (showGeneralHelp) links.push({ title: RECOMMENDATIONS.generalHelp.title, url: RECOMMENDATIONS.generalHelp.url });
+  return { links, videos };
 }

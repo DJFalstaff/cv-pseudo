@@ -158,23 +158,29 @@ export async function callProvider(prompt, options = {}) {
       // then the CartoonVillains channel + web sources when web help was used.
       const sources = [];
       const seen = new Set();
-      const recommended = resolveRecommendations(args.recommendedModules, args.showGeneralHelp);
+      const { links: recommendedLinks, videos: recommendedVideos } = resolveRecommendations(
+        args.recommendedModules,
+        args.showGeneralHelp
+      );
       const webSources = collectedSources.length
         ? [{ title: "CartoonVillains on YouTube", url: CARTOON_VILLAINS_YOUTUBE }, ...collectedSources]
         : [];
-      for (const source of [...recommended, ...webSources]) {
+      for (const source of [...recommendedLinks, ...webSources]) {
         if (!source.url || seen.has(source.url)) continue;
         seen.add(source.url);
         sources.push(source);
         if (sources.length >= 8) break;
       }
+      // Prefer a webHelp video the model actually chose; otherwise embed the first recommended one
+      // instead of only ever linking it (recommendation videos are curated, real URLs too).
+      const videoUrl = args.videoUrl || recommendedVideos[0]?.url || "";
       return {
         answer: args.answer || "",
         highlightKey: args.highlightKey,
         missingModule: args.missingModule,
         openUuid: args.openUuid,
         openOptions: Array.isArray(args.openOptions) ? args.openOptions : null,
-        videoUrl: args.videoUrl,
+        videoUrl,
         sources: sources.length ? sources : null,
         stumped: Boolean(args.stumped),
         rollFormula: args.rollFormula,
