@@ -18,10 +18,22 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /**
  * Example prompts shown as rotating placeholder text in the empty input, to suggest what Pseudo can
- * do. Kept broadly useful (they read well for any campaign) with a dark-urban-fantasy lean. Edit or
- * add freely — one random entry shows on open, and they rotate every few seconds while the box is empty.
+ * do — split into two pools by the kind of help they demonstrate. One random entry from the ACTIVE
+ * pool shows on open, and they rotate every few seconds while the box is empty.
  */
-const EXAMPLE_PROMPTS = [
+
+/** Setup/system help: how-to questions about Foundry, the game system, or installed modules. */
+const SETUP_PROMPTS = [
+  "How do I add a player login?",
+  "How do I get 3D dice?",
+  "How do I create an NPC?",
+  "How do I create a journal?",
+  "How do I find a game rule?"
+];
+
+/** Narrative help: creative-generation prompts, dark-urban-fantasy leaning. Currently unused — see
+ * ACTIVE_PROMPTS below — kept here so re-enabling later is a one-line change. */
+const NARRATIVE_PROMPTS = [
   "Name five dive bars in a cursed harbor town",
   "Give me a plot hook for tonight's session",
   "Describe a twitchy informant who knows too much",
@@ -31,17 +43,16 @@ const EXAMPLE_PROMPTS = [
   "Name an occult bookshop and whoever's behind the counter",
   "Give this monster a memorable weakness",
   "Turn an abandoned tenement into three clues",
-  "What would a desperate cultist offer as a bribe?",
-  "How do I add a player login?",
-  "How do I get 3D dice?",
-  "How do I create an NPC?",
-  "How do I create a journal?",
-  "How do I find a game rule?"
+  "What would a desperate cultist offer as a bribe?"
 ];
+
+/** Focused on setup/system help for now — swap in NARRATIVE_PROMPTS or [...SETUP_PROMPTS,
+ * ...NARRATIVE_PROMPTS] here when that changes. */
+const ACTIVE_PROMPTS = SETUP_PROMPTS;
 
 /** @returns {string} A random example prompt. */
 function randomExample() {
-  return EXAMPLE_PROMPTS[Math.floor(Math.random() * EXAMPLE_PROMPTS.length)];
+  return ACTIVE_PROMPTS[Math.floor(Math.random() * ACTIVE_PROMPTS.length)];
 }
 
 /** Cap on transcript lines kept in view, so a long session doesn't grow the DOM unbounded. */
