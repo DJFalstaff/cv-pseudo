@@ -133,10 +133,27 @@ function wizardBadge(wizard) {
  */
 function missingCriticalDependencies() {
   if (!game.user.isGM) return [];
-  return CRITICAL_DEPENDENCIES.filter((d) => !game.modules.get(d.id)?.active).map((d) => ({
-    ...d,
-    installed: Boolean(game.modules.get(d.id))
-  }));
+  // The world's *saved* module configuration updates the instant a module toggle is saved — before
+  // anyone reloads. A disable (or enable) a module manager offers to defer ("Reload Later") leaves
+  // this client's live game.modules state stale in the meantime, silently hiding exactly the moment a
+  // GM most needs to hear about it. Comparing saved vs. live catches that gap instead of trusting
+  // live-only state, which would report "still fine" right up until the reload actually happens.
+  const stored = game.settings.get("core", "moduleConfiguration") ?? {};
+  const results = [];
+  for (const d of CRITICAL_DEPENDENCIES) {
+    const mod = game.modules.get(d.id);
+    if (!mod) {
+      results.push({ ...d, status: "missing" });
+      continue;
+    }
+    const liveActive = Boolean(mod.active);
+    const storedActive = d.id in stored ? Boolean(stored[d.id]) : liveActive;
+    if (liveActive && storedActive) continue; // genuinely fine, nothing to report
+    if (liveActive && !storedActive) results.push({ ...d, status: "pendingDisable" });
+    else if (!liveActive && storedActive) results.push({ ...d, status: "pendingEnable" });
+    else results.push({ ...d, status: "inactive" });
+  }
+  return results;
 }
 
 /**
@@ -295,7 +312,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       runMacro: AssistantDialog.#onRunMacro,
       mic: AssistantDialog.#onMic,
       launchWizard: AssistantDialog.#onLaunchWizard,
-      askExample: AssistantDialog.#onAskExample
+      askExample: AssistantDialog.#onAskExample,
+      reloadWorld: AssistantDialog.#onReloadWorld
     }
   };
 
@@ -573,6 +591,15 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     if (!prompt || !input) return;
     input.value = prompt;
     this.#ask();
+  }
+
+  /**
+   * Reload the client to apply a module-configuration change that's already saved but hasn't taken
+   * effect yet — the fix for the pendingDisable/pendingEnable dependency-warning states.
+   * @this {AssistantDialog}
+   */
+  static #onReloadWorld() {
+    window.location.reload();
   }
 
   /* -------------------------------------------- */

@@ -9,17 +9,22 @@
       <ul>
         {{#each missingDependencies as |dep|}}
         <li>
-          {{#if dep.installed}}
-          {{localize "CVP.Assistant.DependencyInactive" title=dep.title feature=dep.feature}}
-          {{else}}
+          {{#if (eq dep.status "missing")}}
           {{localize "CVP.Assistant.DependencyMissing" title=dep.title feature=dep.feature}}
+          <button type="button" class="cvp-link" data-action="showMe" data-key="manage-modules">{{localize "CVP.Assistant.ShowMe"}}</button>
+          {{else if (eq dep.status "inactive")}}
+          {{localize "CVP.Assistant.DependencyInactive" title=dep.title feature=dep.feature}}
+          <button type="button" class="cvp-link" data-action="showMe" data-key="manage-modules">{{localize "CVP.Assistant.ShowMe"}}</button>
+          {{else if (eq dep.status "pendingDisable")}}
+          {{localize "CVP.Assistant.DependencyPendingDisable" title=dep.title feature=dep.feature}}
+          <button type="button" class="cvp-link" data-action="reloadWorld">{{localize "CVP.Assistant.ReloadNow"}}</button>
+          {{else}}
+          {{localize "CVP.Assistant.DependencyPendingEnable" title=dep.title feature=dep.feature}}
+          <button type="button" class="cvp-link" data-action="reloadWorld">{{localize "CVP.Assistant.ReloadNow"}}</button>
           {{/if}}
         </li>
         {{/each}}
       </ul>
-      <button type="button" class="cvp-link" data-action="showMe" data-key="manage-modules">
-        {{localize "CVP.Assistant.ShowMe"}}
-      </button>
     </div>
   </div>
   {{/if}}
