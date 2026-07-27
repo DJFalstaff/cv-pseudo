@@ -37,13 +37,24 @@
   {{#if isSelect}}
   <div class="cvp-wizard-step cvp-wizard-select">
     <h2>What belongs in this campaign?</h2>
+    <p>
+      This step checks whether you have <strong>Tagger</strong> installed — a free, separate
+      <em>add-on module</em>, not something built into Foundry itself. Like any module, it has to be
+      installed and enabled on its own (from the Add-on Modules tab on Foundry's Setup screen) before
+      it does anything. If it's there and active, this wizard reads the tags you've already applied
+      to your scenes, actors, items, and journals with it, and uses them to guess what belongs to this
+      campaign — so you don't have to pick everything by hand in the next step. If it's not installed,
+      that's completely fine; it's an optional shortcut, not a requirement, and you'll just do that
+      picking by hand instead.
+    </p>
 
     {{#if taggerActive}}
       {{#if hasTagGroups}}
       <p>
-        Pick the tag (or tags) that represent this campaign. Everything tagged with them becomes the
-        starting point for the Adventure in the next step — you can still add or remove individual
-        pieces there.
+        Tagger is installed and active, and it already found tags applied in this World. Pick the tag
+        (or tags) below that represent this campaign — everything carrying them becomes the starting
+        point for the Adventure in the next step. You'll still be able to add or remove individual
+        pieces there by hand.
       </p>
       <div class="cvp-wizard-tag-list">
         {{#each tagGroups as |group|}}
@@ -57,17 +68,19 @@
       <p class="cvp-wizard-hint">{{selectedCount}} tag(s) selected. Leave everything unchecked to skip straight to manual selection.</p>
       {{else}}
       <p>
-        Tagger is active, but nothing in this World has been tagged yet. No problem — you'll pick
-        content manually in the next step instead. (Tagging things first, then re-running this wizard,
-        makes future updates to this module much faster.)
+        Tagger is installed and active, but nothing in this World has been tagged yet — so there's
+        nothing for it to hand this wizard automatically. That's fine: you'll pick content by hand in
+        the next step instead. (Tagging things with Tagger first, then re-running this wizard, makes
+        future updates to this module faster — but it's entirely optional.)
       </p>
       {{/if}}
     {{else}}
     <p>
-      This step works best with the <strong>Tagger</strong> module (already installed here) — tag your
-      campaign's scenes, actors, items, and journals with something like <code>my-campaign</code>, and
-      this wizard groups everything by tag automatically. Tagger isn't active right now, so there's
-      nothing to group yet — you'll pick content manually in the next step instead.
+      Tagger isn't installed (or isn't enabled) in this World right now, so there's nothing for this
+      wizard to read automatically — you'll pick everything by hand in the next step instead, which
+      works just as well. If you'd like this step to do the grouping for you next time, install
+      <strong>Tagger</strong> from the Add-on Modules tab on Foundry's Setup screen, enable it for this
+      World, tag your content with it, and re-run this wizard.
     </p>
     {{/if}}
   </div>
@@ -79,7 +92,8 @@
     <p>
       This is where your campaign actually becomes something packageable — a real Foundry
       <strong>Adventure</strong> document that holds the content. Nothing gets bundled unless you
-      create it here; the rest of the wizard has nothing to work with until you do.
+      create it here, and even after you do, nothing is added to it automatically unless you selected
+      tags in the previous step.
     </p>
     <div class="form-group">
       <label>Campaign name</label>
@@ -95,8 +109,22 @@
     {{else}}
     <p>
       <strong>"{{adventureName}}"</strong> created — {{adventureSummary}}. Foundry's own Adventure
-      Builder opened in a separate window; use it to add, remove, or reorganize anything before moving
-      on. You can come back to it any time.
+      Builder opened in a separate window, on its <strong>Contents</strong> tab.
+    </p>
+    <p>
+      That tab works by <strong>drag and drop</strong> — there's no "add" button to click. Open your
+      World's sidebar tabs (Actors, Items, Scenes, Journal Entries, Roll Tables, Macros, Cards, and
+      Playlists) one at a time, and drag each entry you want in this campaign onto the Contents tab.
+      Go through everything you want this campaign to include: every actor (PCs and the important
+      NPCs/monsters), item, scene or map, journal entry (including handouts and lore), roll table,
+      macro, card deck, and playlist. If you selected tags in the last step, those matches were already
+      dragged in for you — it's still worth checking the Contents tab and adding anything that got
+      missed, or that you never tagged.
+    </p>
+    <p>
+      Take your time here — this is the step that decides what actually ships. You can close this
+      wizard, work in the Builder for as long as you need, and come back later; nothing is lost. Use
+      the button below to reopen the Builder if you've closed it.
     </p>
     <button type="button" data-action="reopenBuilder" class="cvp-wizard-btn">Reopen Builder</button>
     {{/unless}}

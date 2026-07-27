@@ -4,6 +4,7 @@
   /* Palette. A dusk-violet familiar with an ember accent; overridden per theme below. */
   --cvp-accent: #7c5cff;
   --cvp-accent-ember: #ff7a4d;
+  --cvp-accent-jade: #2fbf8f;
   --cvp-bg: #1c1b22;
   --cvp-panel: #26242e;
   --cvp-text: #e9e7f0;
@@ -337,6 +338,19 @@
 }
 .cvp-macro i {
   color: var(--cvp-accent-ember);
+}
+
+/* Launch-the-portability-wizard button — jade, so it stands out from routine chat actions. */
+.cvp-wizard-launch {
+  border-color: color-mix(in srgb, var(--cvp-accent-jade) 55%, var(--cvp-border));
+  background: color-mix(in srgb, var(--cvp-accent-jade) 20%, var(--cvp-panel));
+  font-weight: 600;
+}
+.cvp-wizard-launch:hover {
+  background: color-mix(in srgb, var(--cvp-accent-jade) 36%, var(--cvp-panel));
+}
+.cvp-wizard-launch i {
+  color: var(--cvp-accent-jade);
 }
 
 .cvp-open-options {
