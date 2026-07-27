@@ -264,6 +264,15 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
           type: "Adventure",
           ...(packSystem ? { system: packSystem } : {})
         }
+      ],
+      // Groups the pack under a named folder in the Compendium sidebar tab on install, instead of it
+      // sitting as a bare, easy-to-lose entry among every other installed pack — the more content
+      // this ever grows to hold, the more this pays for itself.
+      packFolders: [
+        {
+          name: this.#campaignName,
+          packs: [packName]
+        }
       ]
     };
   }
