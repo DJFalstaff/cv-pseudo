@@ -4,6 +4,7 @@
     { "path": "foundry-basics.md", "title": "Foundry VTT Basics", "scope": "core" },
     { "path": "systems/dnd5e.md", "title": "D&D 5e (dnd5e system)", "scope": "system", "system": "dnd5e" },
     { "path": "modules/remote-highlight-ui.md", "title": "Remote Highlight UI", "scope": "module", "module": "remote-highlight-ui" },
-    { "path": "modules/spotlight-omnisearch.md", "title": "Spotlight Omnisearch", "scope": "module", "module": "spotlight-omnisearch" }
+    { "path": "modules/spotlight-omnisearch.md", "title": "Spotlight Omnisearch", "scope": "module", "module": "spotlight-omnisearch" },
+    { "path": "modules/dice-so-nice.md", "title": "Dice So Nice!", "scope": "module", "module": "dice-so-nice" }
   ]
 }

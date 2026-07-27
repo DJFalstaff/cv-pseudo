@@ -30,6 +30,14 @@ export const RECOMMENDATIONS = {
       video: "https://youtu.be/-_8gVntKyQY",
       when: "managing, organizing, enabling or disabling modules; module presets/profiles; module tags or notes"
     },
+    diceSoNiceGmPush: {
+      title: "Dice So Nice! — push your dice look to every player",
+      url: "https://riccisi.gitlab.io/foundryvtt-dice-so-nice/guide/getting-started/",
+      when:
+        "3D dice, Dice So Nice, customizing dice appearance/colors/materials, giving players the same " +
+        "dice look, matching or syncing player dice to the GM's, everyone at the table having the same " +
+        "dice, sharing a dice theme/preset, saving or backing up dice presets so they aren't lost or overwritten"
+    },
     [CAMPAIGN_PORTABLE_KEY]: {
       title: "Adventure Documents — package and reuse your content",
       url: "https://foundryvtt.com/article/adventure/",
