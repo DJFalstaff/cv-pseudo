@@ -588,7 +588,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       return;
     }
     if (PSEUDO_COMMAND.test(prompt)) {
-      this.#push("pseudo", pseudoAboutText(), { showSettingsButton: true });
+      this.#push("pseudo", pseudoAboutText(), { showSettingsButton: true, highlightKey: "settings-tab" });
       return;
     }
 

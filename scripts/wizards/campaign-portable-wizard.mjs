@@ -1,4 +1,5 @@
 import { MODULE_ID, MODULE_NAME, applyColorScheme, log } from "../constants.mjs";
+import { highlightByKey } from "../ui/highlight.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -156,7 +157,8 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
       downloadManifest: CampaignPortableWizard.#onDownloadManifest,
       setupModuleFolder: CampaignPortableWizard.#onSetupModuleFolder,
       recheckStatus: CampaignPortableWizard.#onRecheckStatus,
-      finish: CampaignPortableWizard.#onFinish
+      finish: CampaignPortableWizard.#onFinish,
+      showMe: CampaignPortableWizard.#onShowMe
     }
   };
 
@@ -508,6 +510,18 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   /** @this {CampaignPortableWizard} */
   static #onFinish() {
     this.close();
+  }
+
+  /**
+   * Spotlight a verified UI target via Remote Highlight UI (a hard dependency of cv-pseudo, so this
+   * is always available). No-ops harmlessly if the key is unknown.
+   * @this {CampaignPortableWizard}
+   * @param {PointerEvent} _event
+   * @param {HTMLElement} target The clicked "Show me" button.
+   */
+  static #onShowMe(_event, target) {
+    const key = target?.dataset?.key;
+    if (key) highlightByKey(key);
   }
 }
 
