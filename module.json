@@ -2,7 +2,7 @@
   "id": "cv-pseudo",
   "title": "Pseudo",
   "description": "Pseudo, a pseudodragon familiar for the GM: a system-neutral AI assistant that reads your world — journals, actors, monsters, roll tables, cards, and compendia — to name things, answer lore and rules questions, and help run the game.",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "compatibility": {
     "minimum": 14,
     "verified": 14

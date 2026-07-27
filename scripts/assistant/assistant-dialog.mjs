@@ -28,7 +28,8 @@ const SETUP_PROMPTS = [
   "How do I get 3D dice?",
   "How do I create an NPC?",
   "How do I create a journal?",
-  "How do I find a game rule?"
+  "How do I find a game rule?",
+  "How do I make my campaign setting portable?"
 ];
 
 /** Narrative help: creative-generation prompts, dark-urban-fantasy leaning. Currently unused — see
