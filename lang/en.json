@@ -53,6 +53,9 @@
   "CVP.Keybindings.Summon.Name": "Summon Pseudo",
   "CVP.Keybindings.Summon.Hint": "Open Pseudo's assistant window to ask about your world's journals, actors, monsters, tables, and cards.",
 
+  "CVP.Keybindings.Mic.Name": "Toggle Pseudo's microphone",
+  "CVP.Keybindings.Mic.Hint": "Start or stop voice dictation, same as clicking the mic button. Only works while Pseudo's window is already open.",
+
   "CVP.Assistant.Title": "Pseudo",
   "CVP.Assistant.You": "You",
   "CVP.Assistant.Empty": "Summon complete. Ask Pseudo about anything in your world.",

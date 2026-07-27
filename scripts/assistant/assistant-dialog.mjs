@@ -274,6 +274,15 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     return this.summon();
   }
 
+  /**
+   * Toggle voice dictation via the mic keybinding — but only if Pseudo is already open. This mirrors
+   * the mic button; it deliberately does not summon the window, unlike the summon keybinding itself.
+   * @returns {void}
+   */
+  static toggleMic() {
+    if (this.#instance?.rendered) this.#instance.#toggleDictation();
+  }
+
   /** @override */
   async _prepareContext(_options) {
     // Only a GM can set a key, so only a GM ever sees the "not configured" nudge. Players rely on the
@@ -333,6 +342,12 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
           event.preventDefault();
           input.value = input.placeholder;
           input.setSelectionRange(input.value.length, input.value.length);
+        } else if (event.altKey && event.code === "KeyM") {
+          // Foundry's global keybinding system suppresses custom keybindings while a text field has
+          // focus (so they don't hijack typing) — but the input is auto-focused right when Pseudo
+          // opens, exactly when someone would reach for this. Handle it locally too.
+          event.preventDefault();
+          this.#toggleDictation();
         }
       });
       input.focus();
@@ -596,8 +611,9 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /**
-   * Start or stop voice dictation. While listening, recognized text is appended live to the input;
-   * stopping (or the recognizer ending) restores the idle state and focuses the box.
+   * Start or stop voice dictation. Starting always clears the box first — reaching for the mic means
+   * asking something new, not continuing a stale draft or an accepted example — then recognized text
+   * fills it live. Stopping (or the recognizer ending) restores the idle state and focuses the box.
    * @returns {void}
    */
   #toggleDictation() {
@@ -612,17 +628,17 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     }
     const input = this.element.querySelector(".cvp-input");
     if (!input) return;
+    input.value = "";
 
     const recognition = new Recognition();
     recognition.lang = game.i18n?.lang || "en-US";
     recognition.interimResults = true;
     recognition.continuous = false;
-    const base = input.value ? `${input.value} ` : "";
 
     recognition.onresult = (event) => {
       let text = "";
       for (const result of event.results) text += result[0].transcript;
-      input.value = base + text;
+      input.value = text;
     };
     const finish = () => {
       this.#recognition = null;

@@ -24,6 +24,18 @@ function registerKeybindings() {
     },
     precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
   });
+
+  // Mirrors the mic button — deliberately doesn't summon Pseudo if it isn't already open.
+  game.keybindings.register(MODULE_ID, "mic", {
+    name: "CVP.Keybindings.Mic.Name",
+    hint: "CVP.Keybindings.Mic.Hint",
+    editable: [{ key: "KeyM", modifiers: ["Alt"] }],
+    onDown: () => {
+      AssistantDialog.toggleMic();
+      return true;
+    },
+    precedence: CONST.KEYBINDING_PRECEDENCE.NORMAL
+  });
 }
 
 Hooks.once("init", () => {
