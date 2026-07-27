@@ -168,9 +168,12 @@
   </div>
 
   <div class="cvp-composer">
-    <textarea class="cvp-input" rows="2"
-              placeholder="{{localize 'CVP.Assistant.Placeholder'}}"
-              aria-label="{{localize 'CVP.Assistant.InputLabel'}}"></textarea>
+    <div class="cvp-input-wrap">
+      <div class="cvp-input-ghost" aria-hidden="true"><span class="cvp-input-ghost-typed"></span><span class="cvp-input-ghost-suggest"></span></div>
+      <textarea class="cvp-input" rows="2"
+                placeholder="{{localize 'CVP.Assistant.Placeholder'}}"
+                aria-label="{{localize 'CVP.Assistant.InputLabel'}}"></textarea>
+    </div>
     {{#if speechSupported}}
     <button type="button" class="cvp-mic" data-action="mic"
             aria-label="{{localize 'CVP.Assistant.Mic'}}" data-tooltip="{{localize 'CVP.Assistant.Mic'}}">

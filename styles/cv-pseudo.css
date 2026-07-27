@@ -510,8 +510,13 @@
   background: var(--cvp-panel);
 }
 
-.cvp-input {
+.cvp-input-wrap {
+  position: relative;
   flex: 1 1 auto;
+}
+
+.cvp-input {
+  width: 100%;
   resize: none;
   background: var(--cvp-bg);
   color: var(--cvp-text);
@@ -519,6 +524,32 @@
   border-radius: 6px;
   padding: 0.4rem 0.5rem;
   font-family: inherit;
+  position: relative; /* stacks above the ghost overlay */
+}
+
+/* Inline command-completion ghost: an invisible spacer matching what's typed, then the rest of the
+   one command it uniquely completes to, in muted color — accepted the same way as example autofill
+   (→ at the end of the text). Must mirror .cvp-input's box model exactly so the suggestion lines up
+   right after the real caret instead of drifting. */
+.cvp-input-ghost {
+  position: absolute;
+  inset: 0;
+  z-index: 1; /* above .cvp-input's own opaque background, which would otherwise hide this entirely */
+  padding: 0.4rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre;
+  overflow: hidden;
+  pointer-events: none;
+}
+.cvp-input-ghost-typed {
+  color: transparent;
+}
+.cvp-input-ghost-suggest {
+  color: var(--cvp-muted);
 }
 
 .cvp-mic {

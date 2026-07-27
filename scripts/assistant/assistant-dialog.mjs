@@ -15,6 +15,7 @@ import { highlightByKey } from "../ui/highlight.mjs";
 import { openByUuid } from "../ui/open-document.mjs";
 import { rollDice, rollTableById, runMacroById } from "../ui/actions.mjs";
 import { getWizard, availableWizards } from "../wizards/registry.mjs";
+import { matchCommand, completionFor } from "./commands.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -60,13 +61,6 @@ function randomExample() {
 
 /** Cap on transcript lines kept in view, so a long session doesn't grow the DOM unbounded. */
 const MAX_TRANSCRIPT = 50;
-
-/** Matches /help — the catalog of everything Pseudo can do. /wizards(/wizard) still works as an
- * alias, since that was the original name before quick questions joined the same catalog. */
-const HELP_COMMAND = /^\/(help|wizards?)$/i;
-
-/** Matches /pseudo — info about the module itself and its settings, not what it can do for you. */
-const PSEUDO_COMMAND = /^\/pseudo$/i;
 
 /**
  * Build the /pseudo command's answer: what Pseudo is, plus every visible setting and keybinding. Setting
@@ -443,6 +437,10 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
           event.preventDefault();
           input.value = input.placeholder;
           input.setSelectionRange(input.value.length, input.value.length);
+        } else if (event.key === "ArrowRight" && this.#acceptGhostCompletion(input)) {
+          // Only fires when a completion is actually showing and the caret is at the very end, so it
+          // never hijacks normal cursor movement while editing earlier in the text.
+          event.preventDefault();
         } else if (event.altKey && event.code === "KeyM") {
           // Foundry's global keybinding system suppresses custom keybindings while a text field has
           // focus (so they don't hijack typing) — but the input is auto-focused right when Pseudo
@@ -451,6 +449,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
           this.#toggleDictation();
         }
       });
+      input.addEventListener("input", () => this.#updateGhostCompletion(input));
+      this.#updateGhostCompletion(input);
       input.focus();
     }
 
@@ -620,17 +620,19 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
 
     this.#push("gm", prompt);
     input.value = "";
+    this.#updateGhostCompletion(input);
 
-    // /help and /pseudo are both answered locally — fixed, curated content, not something to
-    // generate, so both skip the LLM round trip entirely.
-    if (HELP_COMMAND.test(prompt)) {
+    // Known commands are answered locally — fixed, curated content, not something to generate, so
+    // they skip the LLM round trip entirely.
+    const command = matchCommand(prompt);
+    if (command?.name === "/help") {
       this.#push("pseudo", "Here's everything I can help with:", {
         wizardList: availableWizards().map(wizardBadge),
         quickQuestions: [...ACTIVE_PROMPTS]
       });
       return;
     }
-    if (PSEUDO_COMMAND.test(prompt)) {
+    if (command?.name === "/pseudo") {
       this.#push("pseudo", pseudoAboutText(), { showSettingsButton: true, highlightKey: "settings-tab" });
       return;
     }
@@ -823,6 +825,40 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   #setMicActive(active) {
     const button = this.element?.querySelector(".cvp-mic");
     button?.classList.toggle("cvp-mic--recording", active);
+  }
+
+  /**
+   * Refresh the inline ghost-completion overlay to match the input's current text — an invisible
+   * spacer matching what's typed, followed by the remaining characters of the one command it uniquely
+   * completes to (if any), in muted color. Shares the "Right-arrow to use example" setting: turning
+   * that off means → should just move the cursor, for either kind of suggestion.
+   * @param {HTMLTextAreaElement} input
+   * @returns {void}
+   */
+  #updateGhostCompletion(input) {
+    const typedEl = this.element?.querySelector(".cvp-input-ghost-typed");
+    const suggestEl = this.element?.querySelector(".cvp-input-ghost-suggest");
+    if (!typedEl || !suggestEl) return;
+    const completion = game.settings.get(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL) ? completionFor(input.value) : null;
+    typedEl.textContent = completion ? input.value : "";
+    suggestEl.textContent = completion ?? "";
+  }
+
+  /**
+   * Accept the currently-shown ghost command completion, if the caret is at the very end of the
+   * input and a completion is actually showing.
+   * @param {HTMLTextAreaElement} input
+   * @returns {boolean} Whether a completion was accepted (so the caller knows to preventDefault).
+   */
+  #acceptGhostCompletion(input) {
+    const atEnd = input.selectionStart === input.value.length && input.selectionEnd === input.value.length;
+    if (!atEnd || !game.settings.get(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL)) return false;
+    const completion = completionFor(input.value);
+    if (!completion) return false;
+    input.value += completion;
+    input.setSelectionRange(input.value.length, input.value.length);
+    this.#updateGhostCompletion(input);
+    return true;
   }
 
   /** Scroll the transcript to the newest line. */
