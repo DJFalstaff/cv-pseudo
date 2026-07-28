@@ -89,6 +89,18 @@
         {{/each}}
       </div>
       {{/if}}
+      {{#if line.settingsActions.length}}
+      <div class="cvp-wizard-catalog">
+        {{#each line.settingsActions as |act|}}
+        <div class="cvp-wizard-catalog-item">
+          <button type="button" class="cvp-showme cvp-wizard-launch" data-action="{{act.action}}" data-key="{{act.id}}">
+            <i class="fa-solid {{act.icon}}"></i> {{act.title}}
+          </button>
+          <p class="cvp-wizard-catalog-desc">{{act.description}}</p>
+        </div>
+        {{/each}}
+      </div>
+      {{/if}}
       {{#if line.quickQuestions.length}}
       <div class="cvp-quick-questions">
         {{#each line.quickQuestions as |q|}}

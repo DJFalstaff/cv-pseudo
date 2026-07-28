@@ -107,6 +107,7 @@
   "CVP.CoreSettings.Enable": "Apply recommended settings",
   "CVP.CoreSettings.NotNow": "Not now",
   "CVP.CoreSettings.Done": "Settings updated.",
+  "CVP.CoreSettings.AlreadyOptimal": "These settings are already at their recommended values.",
 
   "CVP.Trouble.Title": "Pseudo Troubleshooter",
   "CVP.Trouble.Button": "Pseudo Troubleshooter",

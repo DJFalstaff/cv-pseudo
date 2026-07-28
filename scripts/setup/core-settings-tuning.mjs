@@ -55,15 +55,10 @@ export async function applyCoreSettings() {
 }
 
 /**
- * Once, for a configured GM whose recommended core settings aren't already applied, offer to tune them.
- * Dismissing it (either choice) won't nag again.
+ * Show the "apply recommended core settings?" confirm dialog, then apply on yes.
  * @returns {Promise<void>}
  */
-export async function maybePromptCoreSettingsTuning() {
-  if (!game.user.isGM) return;
-  if (game.settings.get(MODULE_ID, SETTINGS.CORE_SETTINGS_DISMISSED)) return;
-  if (coreSettingsOptimal()) return;
-
+async function showCoreSettingsDialog() {
   const { DialogV2 } = foundry.applications.api;
   const confirmed = await DialogV2.confirm({
     window: { title: game.i18n.localize("CVP.CoreSettings.Title"), icon: "fa-solid fa-dragon" },
@@ -72,9 +67,37 @@ export async function maybePromptCoreSettingsTuning() {
     no: { label: game.i18n.localize("CVP.CoreSettings.NotNow") }
   }).catch(() => false);
 
-  await game.settings.set(MODULE_ID, SETTINGS.CORE_SETTINGS_DISMISSED, true);
   if (confirmed) {
     await applyCoreSettings();
     ui.notifications.info(game.i18n.localize("CVP.CoreSettings.Done"));
   }
+}
+
+/**
+ * Once, for a configured GM whose recommended core settings aren't already applied, offer to tune them.
+ * Dismissing it (either choice) won't nag again — but the GM can still reach the same dialog later on
+ * purpose via openCoreSettingsPrompt() (e.g. from /help).
+ * @returns {Promise<void>}
+ */
+export async function maybePromptCoreSettingsTuning() {
+  if (!game.user.isGM) return;
+  if (game.settings.get(MODULE_ID, SETTINGS.CORE_SETTINGS_DISMISSED)) return;
+  if (coreSettingsOptimal()) return;
+
+  await game.settings.set(MODULE_ID, SETTINGS.CORE_SETTINGS_DISMISSED, true);
+  await showCoreSettingsDialog();
+}
+
+/**
+ * Manually reopen the recommended-settings dialog on request (e.g. a /help button), regardless of
+ * whether the first-run prompt was already dismissed. If everything's already ideal, says so instead
+ * of showing a dialog with nothing to change.
+ * @returns {Promise<void>}
+ */
+export async function openCoreSettingsPrompt() {
+  if (coreSettingsOptimal()) {
+    ui.notifications.info(game.i18n.localize("CVP.CoreSettings.AlreadyOptimal"));
+    return;
+  }
+  await showCoreSettingsDialog();
 }

@@ -15,6 +15,7 @@ import { highlightByKey } from "../ui/highlight.mjs";
 import { openByUuid } from "../ui/open-document.mjs";
 import { rollDice, rollTableById, runMacroById } from "../ui/actions.mjs";
 import { getWizard, availableWizards } from "../wizards/registry.mjs";
+import { openCoreSettingsPrompt } from "../setup/core-settings-tuning.mjs";
 import { matchCommand, completionFor } from "./commands.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
@@ -119,6 +120,22 @@ function pseudoAboutText() {
 function wizardBadge(wizard) {
   return wizard ? { id: wizard.id, title: wizard.title, icon: wizard.icon, description: wizard.description } : null;
 }
+
+/**
+ * Standalone GM-facing settings actions /help exposes alongside the wizard catalog — a single
+ * confirm dialog rather than a multi-step wizard, so it isn't a registry.mjs entry, but the launch
+ * card looks and behaves the same way.
+ * @type {Array<{id: string, action: string, title: string, icon: string, description: string}>}
+ */
+const SETTINGS_ACTIONS = [
+  {
+    id: "coreSettings",
+    action: "openCoreSettings",
+    title: "Recommended Foundry Settings",
+    icon: "fa-sliders",
+    description: "Review and apply a few low-risk display/interaction defaults (token rotation, roll table animation, chat bubbles, left-click release)."
+  }
+];
 
 /**
  * Hard-dependency modules that are missing or installed-but-inactive, each with the feature that
@@ -308,7 +325,8 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       mic: AssistantDialog.#onMic,
       launchWizard: AssistantDialog.#onLaunchWizard,
       askExample: AssistantDialog.#onAskExample,
-      reloadWorld: AssistantDialog.#onReloadWorld
+      reloadWorld: AssistantDialog.#onReloadWorld,
+      openCoreSettings: AssistantDialog.#onOpenCoreSettings
     }
   };
 
@@ -579,6 +597,13 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   /**
+   * @this {AssistantDialog}
+   */
+  static #onOpenCoreSettings() {
+    openCoreSettingsPrompt();
+  }
+
+  /**
    * Ask a /help quick-question button immediately, rather than just staging it in the input — it's a
    * real question meant to be answered, not a draft to edit first, matching how the wizard-launch
    * buttons already act on click instead of requiring a separate confirm step.
@@ -639,6 +664,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     if (command?.name === "/help") {
       this.#push("pseudo", "Here's everything I can help with:", {
         wizardList: availableWizards().map(wizardBadge),
+        settingsActions: game.user.isGM ? [...SETTINGS_ACTIONS] : null,
         quickQuestions: [...ACTIVE_PROMPTS]
       });
       return;
@@ -775,6 +801,7 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
       macroRun: meta.macroRun ?? null,
       launchWizard: meta.launchWizard ?? null,
       wizardList: meta.wizardList ?? null,
+      settingsActions: meta.settingsActions ?? null,
       quickQuestions: meta.quickQuestions ?? null,
       showSettingsButton: meta.showSettingsButton ?? false
     });
