@@ -24,7 +24,7 @@ jobs:
           fi
 
       - name: Build module.zip
-        run: zip -r module.zip module.json lang scripts styles templates knowledge assets
+        run: zip -r module.zip module.json CHANGELOG.md lang scripts styles templates knowledge assets
 
       - name: Publish release
         env:
