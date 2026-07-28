@@ -2,6 +2,12 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.7.2 — 2026-07-28
+- Fixed the recommended-settings dialog: chat bubbles and pan-to-speaker are now correctly recommended OFF (they were backwards, recommending ON).
+
+## v14.7.1 — 2026-07-28
+- Added this changelog and included it in the release zip, so tools like Big Bad Module Manager can show it.
+
 ## v14.7.0 — 2026-07-27
 - `/help` now exposes the recommended Foundry settings configurator as a launch card, reachable anytime instead of only on first run.
 
