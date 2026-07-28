@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.2 — 2026-07-28
+- Replaced the chat window's empty-state dragon icon with a custom pseudodragon logo image.
+
 ## v14.9.1 — 2026-07-28
 - Embedded a tutorial video on Adventure compendiums in the wizard's "Build the Adventure" step.
 
