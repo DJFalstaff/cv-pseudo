@@ -215,18 +215,58 @@
 
   {{#if isClosing}}
   <div class="cvp-wizard-step cvp-wizard-closing">
-    <h2>That's everything worth knowing</h2>
-    <p>Nothing was changed while you read this — every value in this World is exactly what it was
-      before you opened the wizard.</p>
+    <h2>Bastions (2024 DMG downtime)</h2>
     <p>
-      One more corner worth knowing about if you're running the 2024 DMG's downtime rules: <strong>Bastions</strong>
-      has its own settings dialog (Loyalty Score, upkeep timing, and more) — only relevant if your
-      campaign actually uses that subsystem.
+      One more corner worth knowing about: <strong>Bastions</strong> is the 2024 DMG's downtime/stronghold
+      subsystem, letting level-5+ characters build facilities and issue orders that resolve over time.
+      It's entirely optional — these settings only matter if your campaign actually uses it.
     </p>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Loyalty Score <span class="cvp-setting-current">{{loyaltyScoreCurrent}}</span></div>
+      <p>A separate toggle (not part of the Bastion dialog below) that enables optional Loyalty
+        tracking for NPCs — hirelings and followers get a trackable loyalty stat.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn it on if you're running
+        Bastion facilities staffed by hirelings and want their loyalty to matter mechanically. Leave it
+        off if you're not using Bastions, or want a simpler downtime experience without an extra stat to
+        track per NPC.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Enable Bastion Functionality <span class="cvp-setting-current">{{bastionEnabledCurrent}}</span></div>
+      <p>Gives level-5+ characters a Bastion tab on their sheet, where they build facilities and issue
+        orders to them.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn on if your campaign
+        includes the Bastion subsystem at all. Leave off if you're not running it — it adds a fair
+        amount of new UI and bookkeeping to every eligible character sheet, so there's no reason to turn
+        it on until you actually intend to use it.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Show Bastion Turn Button <span class="cvp-setting-current">{{bastionTurnButtonCurrent}}</span></div>
+      <p>Adds a button to the main interface for manually advancing Bastion turns — the time unit
+        Bastion orders resolve on.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn on once Bastions are
+        enabled and you want a quick, one-click way to advance turns for the whole table, instead of
+        doing it from inside each character's Bastion tab.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Bastion Turn Duration <span class="cvp-setting-current">{{bastionTurnDurationCurrent}} days</span></div>
+      <p>How many in-game days pass per Bastion turn — the pacing rate at which facility orders
+        resolve.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> shorten it for a snappier
+        downtime loop where facility orders resolve quickly. Lengthen it if you want Bastion progress to
+        feel like a slower, longer-term investment that better matches a lower-frequency session
+        cadence.</p>
+    </div>
+
     <button type="button" class="cvp-wizard-btn" data-action="openMenu" data-menu="bastionConfiguration">
       <i class="fa-solid fa-chess-rook"></i> Open Bastion Settings
     </button>
-    <p>You can reopen this wizard anytime from <code>/help</code>.</p>
+
+    <p>Nothing was changed while you read this — every value in this World is exactly what it was
+      before you opened the wizard. You can reopen this wizard anytime from <code>/help</code>.</p>
   </div>
   {{/if}}
 

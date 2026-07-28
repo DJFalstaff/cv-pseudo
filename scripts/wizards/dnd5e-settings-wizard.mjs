@@ -20,6 +20,20 @@ function getDnd5e(key) {
 }
 
 /**
+ * Read a field out of dnd5e's bastionConfiguration object setting (enabled/button/duration),
+ * tolerating a missing key across dnd5e versions.
+ * @param {string} field
+ * @returns {*}
+ */
+function getBastion(field) {
+  try {
+    return game.settings.get("dnd5e", "bastionConfiguration")?.[field];
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * The localized label for a setting's current value, when that setting is a choice field.
  * @param {string} namespace "core" or "dnd5e"
  * @param {string} key
@@ -157,7 +171,13 @@ export class Dnd5eSettingsWizard extends HandlebarsApplicationMixin(ApplicationV
       challengeVisibilityCurrent: choiceLabel("dnd5e", "challengeVisibility", getDnd5e("challengeVisibility")),
       attackVisibilityCurrent: choiceLabel("dnd5e", "attackRollVisibility", getDnd5e("attackRollVisibility")),
       bloodiedCurrent: choiceLabel("dnd5e", "bloodied", getDnd5e("bloodied")),
-      concealDescriptionsCurrent: getDnd5e("concealItemDescriptions") ? "On" : "Off"
+      concealDescriptionsCurrent: getDnd5e("concealItemDescriptions") ? "On" : "Off",
+
+      // Bastions
+      loyaltyScoreCurrent: getDnd5e("loyaltyScore") ? "On" : "Off",
+      bastionEnabledCurrent: getBastion("enabled") ? "On" : "Off",
+      bastionTurnButtonCurrent: getBastion("button") ? "On" : "Off",
+      bastionTurnDurationCurrent: getBastion("duration") ?? 7
     };
   }
 

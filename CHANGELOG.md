@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.5 — 2026-07-28
+- The dnd5e settings wizard's closing step now explains the actual Bastion settings (Loyalty Score, Enable Bastion Functionality, Show Bastion Turn Button, Bastion Turn Duration) with the same "reasons to change it" detail as every other step, instead of a one-line pointer to the dialog.
+
 ## v14.9.4 — 2026-07-28
 - Fixed the Back/Next buttons getting pushed out of view on long wizard steps (e.g. the dnd5e settings wizard's Combat & Initiative step). The step content now scrolls independently of a fixed nav footer, instead of the whole window scrolling as one unit.
 
