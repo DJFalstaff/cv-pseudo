@@ -902,6 +902,46 @@
   background: color-mix(in srgb, var(--cvp-accent) 82%, var(--cvp-accent-ember));
 }
 
+/* -------------------------------------------- */
+/*  D&D 5e Settings Wizard                      */
+/* -------------------------------------------- */
+
+.cvp-setting-card {
+  border: 1px solid var(--cvp-border);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.cvp-setting-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  font-weight: 600;
+  color: var(--cvp-text);
+  margin-bottom: 0.3rem;
+}
+
+.cvp-setting-current {
+  font-weight: 500;
+  font-size: 0.78rem;
+  color: var(--cvp-accent);
+  background: color-mix(in srgb, var(--cvp-accent) 12%, transparent);
+  border-radius: 6px;
+  padding: 0.1rem 0.5rem;
+  white-space: nowrap;
+}
+
+.cvp-setting-sub {
+  font-size: 0.85rem;
+  color: var(--cvp-muted);
+}
+
+.cvp-setting-reason {
+  margin: 0;
+}
+
 .cvp-wizard-tag-list {
   display: flex;
   flex-direction: column;

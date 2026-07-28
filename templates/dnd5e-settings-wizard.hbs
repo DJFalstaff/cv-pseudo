@@ -1,0 +1,243 @@
+<div class="cvp-wizard-body">
+
+  <div class="cvp-wizard-progress">Step {{stepNumber}} of {{totalSteps}}</div>
+
+  {{#if isIntro}}
+  <div class="cvp-wizard-step cvp-wizard-intro">
+    <h2>Learn D&D 5e's Settings</h2>
+    <p>
+      dnd5e ships with a lot of rules knobs — some quietly fix a gap between Foundry's defaults and the
+      actual rulebook, others are genuine house-rule variants where different tables want different
+      answers. None of them have one universally "correct" value.
+    </p>
+    <p>
+      This wizard won't change anything for you. Each step explains what a setting does and gives
+      concrete reasons you might want it on, off, or set a different way — then hands you a button
+      that opens the real Foundry dialog where you make the call yourself.
+    </p>
+  </div>
+  {{/if}}
+
+  {{#if isFoundation}}
+  <div class="cvp-wizard-step cvp-wizard-setting-step">
+    <h2>The Foundation</h2>
+    <p>Two settings shape everything else in the ruleset — worth checking first.</p>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Rules Version <span class="cvp-setting-current">{{rulesVersionCurrent}}</span></div>
+      <p>Switches dnd5e between the 2024 ("modern") and 2014 ("legacy") rule sets — spell text, class
+        features, and stat blocks all follow this.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> pick Legacy if you're running a
+        published 2014-era adventure and want stat blocks and spell text to match the book you're
+        reading from, or if your table simply prefers the older rules. Pick Modern for anything written
+        for or updated to the 2024 rules, or if you're starting fresh with no legacy material to match.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Grid Diagonals <span class="cvp-setting-current">{{gridDiagonalsCurrent}}</span></div>
+      <p>Controls what a diagonal move costs on the grid. dnd5e's actual rule (both editions) is
+        <strong>alternating 5/10/5</strong> — the first diagonal costs 5ft, the second 10ft, alternating
+        from there.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> switch to Alternating if you
+        want movement and range measurement to strictly match the rulebook — it's not a house rule,
+        it's the actual RAW cost. Plenty of tables still run every-diagonal-costs-5ft anyway because
+        it's simpler mental math and the difference rarely swings a fight; that's a deliberate,
+        reasonable simplification too, not a mistake.</p>
+      <button type="button" class="cvp-wizard-btn" data-action="showMe" data-key="settings-tab">
+        <i class="fa-solid fa-location-crosshairs"></i> Show me where
+      </button>
+    </div>
+  </div>
+  {{/if}}
+
+  {{#if isCombat}}
+  <div class="cvp-wizard-step cvp-wizard-setting-step">
+    <h2>Combat &amp; Initiative</h2>
+    <p>All five of these live in one dialog — <strong>Configure Combat</strong>.</p>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Dexterity Tiebreaker <span class="cvp-setting-current">{{dexTiebreakerCurrent}}</span></div>
+      <p>RAW breaks initiative ties using the higher raw Dexterity score.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn it on for strict RAW play
+        and one less manual ruling at the table. Leave it off if you'd rather adjudicate ties yourself
+        — a coin flip, a reroll, or just narrative judgment.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Initiative Score <span class="cvp-setting-current">{{initiativeScoreCurrent}}</span></div>
+      <p>The alternative to rolling: a flat "10 + initiative bonus" score, used instead of a d20 roll.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> switch to a fixed score for
+        faster, more predictable combat starts — useful for organized play or tables that find rolling
+        for turn order to be dead time. Keep rolling if initiative uncertainty is part of the excitement
+        for your group.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Critical Damage — Multiply Modifiers <span class="cvp-setting-current">{{critMultiplyCurrent}}</span></div>
+      <div class="cvp-setting-name">Critical Damage — Maximize Dice <span class="cvp-setting-current">{{critMaximizeCurrent}}</span></div>
+      <p>Two independent ways to make crits hit harder than standard RAW (which just doubles the dice).</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn either on if your table
+        wants crits to feel more dramatic and swingy, especially at higher levels where flat modifiers
+        matter more. Leave both off to match published encounter math exactly — CR and monster HP are
+        balanced around standard crit rules.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Recharge Abilities (NPCs) <span class="cvp-setting-current">{{rechargeCurrent}}</span></div>
+      <p>Whether abilities like "Recharge 5-6" roll automatically at the start of the NPC's turn instead
+        of waiting for a manual click.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> automate it to save clicks when
+        running several recharge-ability monsters at once. Leave it manual if you like choosing, for
+        pacing or drama, exactly when a recharge "happens."</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">NPC Hit Points <span class="cvp-setting-current">{{npcHpCurrent}}</span></div>
+      <p>Whether a new NPC token rolls its actual hit dice for HP, instead of using the flat average
+        printed in the stat block.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> roll for variance and
+        unpredictability — no two goblins are quite the same. Keep the average if you want your CR-based
+        encounter math to match the book exactly, or you're balancing an encounter in advance.</p>
+    </div>
+
+    <button type="button" class="cvp-wizard-btn" data-action="openMenu" data-menu="combatConfiguration">
+      <i class="fa-solid fa-swords"></i> Open Combat Settings
+    </button>
+  </div>
+  {{/if}}
+
+  {{#if isCampaignStyle}}
+  <div class="cvp-wizard-step cvp-wizard-setting-step">
+    <h2>Pacing &amp; Campaign Style</h2>
+    <p>These live under <strong>Configure Variant Rules</strong> — the ones with the biggest effect on
+      how your whole campaign feels.</p>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Rest Variant <span class="cvp-setting-current">{{restVariantCurrent}}</span></div>
+      <p>Standard PHB rests are a 1-hour short rest and an 8-hour long rest. "Gritty Realism" stretches
+        that to an 8-hour short rest and a 7-day long rest; "Epic" shrinks it to minutes.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> Gritty Realism if you want
+        resource attrition (spell slots, HP) to matter across a whole in-game week — a slower,
+        survival-flavored pace. Epic if you want fast, cinematic, high-power one-shots where resources
+        barely matter. Standard PHB fits most ordinary campaigns.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Proficiency Variant <span class="cvp-setting-current">{{proficiencyCurrent}}</span></div>
+      <p>The alternative to a flat proficiency bonus is a scaling proficiency <em>die</em> you roll and
+        add, instead of adding a fixed number.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> the dice variant adds extra
+        swing and "anything can happen" flavor some tables enjoy. The flat bonus is simpler, more
+        predictable, and easier to plan around when building or judging a character.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Leveling Mode <span class="cvp-setting-current">{{levelingModeCurrent}}</span></div>
+      <p>Whether characters level up by tracked experience points, or whenever the GM decides the story
+        has reached that point (Milestone).</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> Milestone removes XP
+        bookkeeping entirely and ties pacing to the story instead of combat math. XP tracking gives
+        players visible, concrete feedback and rewards proactive engagement with the fiction.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Encumbrance Tracking <span class="cvp-setting-current">{{encumbranceCurrent}}</span></div>
+      <p>Whether carried weight is tracked at all, and what happens when a character exceeds their
+        capacity. <span class="cvp-setting-sub">Track Currency Weight: {{currencyWeightCurrent}}
+        (only matters if encumbrance is on)</span></p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn it on for
+        survival/dungeon-crawl campaigns where "can you actually carry this out" is a real decision.
+        Leave it off for narrative-forward campaigns where it's rarely relevant and just adds
+        bookkeeping.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Honor / Sanity Ability Scores
+        <span class="cvp-setting-current">Honor: {{honorScoreCurrent}} · Sanity: {{sanityScoreCurrent}}</span>
+      </div>
+      <p>Two optional 7th ability scores from specific published settings — Honor for
+        honor-driven settings, Sanity for horror/madness-driven ones.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> only turn one on if your
+        campaign is actually built around that theme — otherwise it's an unused stat on every sheet.</p>
+    </div>
+
+    <button type="button" class="cvp-wizard-btn" data-action="openMenu" data-menu="variantRulesConfiguration">
+      <i class="fa-solid fa-list-check"></i> Open Variant Rules Settings
+    </button>
+  </div>
+  {{/if}}
+
+  {{#if isVisibility}}
+  <div class="cvp-wizard-step cvp-wizard-setting-step">
+    <h2>Secrecy &amp; Visibility</h2>
+    <p>All four live under <strong>Configure Visibility</strong> — how much mechanical information
+      players see versus what stays hidden behind the GM screen.</p>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Challenge Visibility <span class="cvp-setting-current">{{challengeVisibilityCurrent}}</span></div>
+      <p>Controls whether players see the DCs of checks, and whether success/failure gets highlighted
+        in chat.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> show more for a transparent,
+        rules-forward table that likes knowing exactly what they needed to hit. Hide more to preserve
+        mystery and let the GM narrate outcomes without the table math-checking every roll.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Attack Result Visibility <span class="cvp-setting-current">{{attackVisibilityCurrent}}</span></div>
+      <p>Whether the attack roll's actual number shows up in the chat card for players.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> show it for faster resolution
+        and no "did that hit?" questions. Hide it to keep the GM narrating hit/miss instead of the
+        table reading it off the math.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Bloodied Status <span class="cvp-setting-current">{{bloodiedCurrent}}</span></div>
+      <p>Whether a "bloodied" (half HP or less) marker shows on enemy tokens, and to whom.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> show it to everyone for real
+        tactical information — players can make informed focus-fire or retreat calls. Restrict it to
+        keep how tough a monster still is a genuine unknown.</p>
+    </div>
+
+    <div class="cvp-setting-card">
+      <div class="cvp-setting-name">Conceal NPC Descriptions <span class="cvp-setting-current">{{concealDescriptionsCurrent}}</span></div>
+      <p>Hides an NPC or monster item's description text from players when the GM posts it to chat.</p>
+      <p class="cvp-setting-reason"><strong>Reasons to change it:</strong> turn it on if item
+        descriptions tend to spoil information the characters haven't actually learned yet — a secret
+        weakness or hidden ability written right in the text.</p>
+    </div>
+
+    <button type="button" class="cvp-wizard-btn" data-action="openMenu" data-menu="visibilityConfiguration">
+      <i class="fa-solid fa-eye"></i> Open Visibility Settings
+    </button>
+  </div>
+  {{/if}}
+
+  {{#if isClosing}}
+  <div class="cvp-wizard-step cvp-wizard-closing">
+    <h2>That's everything worth knowing</h2>
+    <p>Nothing was changed while you read this — every value in this World is exactly what it was
+      before you opened the wizard.</p>
+    <p>
+      One more corner worth knowing about if you're running the 2024 DMG's downtime rules: <strong>Bastions</strong>
+      has its own settings dialog (Loyalty Score, upkeep timing, and more) — only relevant if your
+      campaign actually uses that subsystem.
+    </p>
+    <button type="button" class="cvp-wizard-btn" data-action="openMenu" data-menu="bastionConfiguration">
+      <i class="fa-solid fa-chess-rook"></i> Open Bastion Settings
+    </button>
+    <p>You can reopen this wizard anytime from <code>/help</code>.</p>
+  </div>
+  {{/if}}
+
+  <div class="cvp-wizard-nav">
+    {{#if canBack}}
+    <button type="button" data-action="back" class="cvp-wizard-btn">Back</button>
+    {{/if}}
+    {{#unless isClosing}}
+    <button type="button" data-action="next" class="cvp-wizard-btn cvp-wizard-btn--primary">
+      {{#if isIntro}}Get Started{{else}}Next{{/if}}
+    </button>
+    {{/unless}}
+  </div>
+
+</div>
