@@ -2,6 +2,12 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.0 — 2026-07-28
+- Cut the Campaign Portability Wizard from 5 steps to 3. Removed the Tagger-based "smart selection" step entirely — it assumed Tagger tags are used as broad content-categorization labels, but in practice they're scoped, single-purpose automation identifiers (e.g. for Monk's Active Tile Triggers), so the step surfaced tags that didn't map to anything meaningful.
+- Merged "Generate the Module" and "Finish it on the Setup screen" into one final screen — a plain checklist for the parts that genuinely can't happen from inside a running World, instead of a wizard step implying more automation than it can deliver.
+- The generated module's Compendium-sidebar folder is now a fixed "My Adventures" (was the campaign name, duplicating the pack's own label) — every campaign the wizard ever exports now pools into that one shared folder instead of each getting its own same-named-as-itself folder holding a single pack.
+- New Adventures now default to "First Campaign" instead of the World's title.
+
 ## v14.8.0 — 2026-07-28
 - Moved "Summon Pseudo" from the Settings sidebar to its own button on the left scene-control toolbar, directly under Notes.
 - Moved "Pseudo Setup" and "Pseudo Troubleshooter" into Pseudo's own section in Configure Settings (as proper settings-menu buttons), instead of loose buttons bolted onto the whole Settings sidebar tab.

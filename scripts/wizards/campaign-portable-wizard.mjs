@@ -4,9 +4,9 @@ import { highlightByKey } from "../ui/highlight.mjs";
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 /** Linear step sequence. */
-const STEPS = ["pitch", "select", "adventure", "module", "handoff"];
+const STEPS = ["pitch", "adventure", "module"];
 
-/** World document collections to scan for Tagger tags, and the label shown per type. */
+/** World document collections summarized on an Adventure's card once it's been built. */
 const SCAN_COLLECTIONS = {
   actors: { get: () => game.actors, label: "Actor" },
   items: { get: () => game.items, label: "Item" },
@@ -18,51 +18,11 @@ const SCAN_COLLECTIONS = {
   macros: { get: () => game.macros, label: "Macro" }
 };
 
-/**
- * Scan every world document collection for Tagger tags, grouping documents by tag. Returns an empty
- * map if Tagger isn't installed/active — smart selection is an enhancement, not a hard dependency.
- * @returns {Array<{tag: string, count: number, byType: Array<{label: string, count: number}>}>}
- *   Sorted by document count, descending.
- */
-function scanTagGroups() {
-  const groups = new Map();
-  if (!game.modules.get("tagger")?.active) return [];
-
-  for (const { get, label } of Object.values(SCAN_COLLECTIONS)) {
-    for (const doc of get().contents) {
-      const tags = doc.getFlag("tagger", "tags") ?? [];
-      for (const tag of tags) {
-        if (!groups.has(tag)) groups.set(tag, { tag, count: 0, byType: new Map() });
-        const group = groups.get(tag);
-        group.count++;
-        group.byType.set(label, (group.byType.get(label) ?? 0) + 1);
-      }
-    }
-  }
-
-  return [...groups.values()]
-    .map((g) => ({ tag: g.tag, count: g.count, byType: [...g.byType.entries()].map(([label, count]) => ({ label, count })) }))
-    .sort((a, b) => b.count - a.count);
-}
-
-/**
- * Gather the actual World documents matching the selected tags, grouped by the Adventure schema
- * field they belong under (the SCAN_COLLECTIONS keys already match those field names exactly).
- * @param {Set<string>} selectedTags
- * @returns {Record<string, ClientDocument[]>}
- */
-function collectTaggedDocuments(selectedTags) {
-  const result = {};
-  if (!selectedTags.size) return result;
-  for (const [field, { get }] of Object.entries(SCAN_COLLECTIONS)) {
-    const matched = get().contents.filter((doc) => {
-      const tags = doc.getFlag("tagger", "tags") ?? [];
-      return tags.some((t) => selectedTags.has(t));
-    });
-    if (matched.length) result[field] = matched;
-  }
-  return result;
-}
+/** Every campaign this wizard exports lands in the same shared Compendium-sidebar folder — Foundry
+ * pools packFolders entries by name across every active module's manifest, so a fixed name here means
+ * campaigns exported in separate wizard runs (each its own module) still consolidate into one folder
+ * instead of each getting its own same-named-as-itself folder holding a single pack. */
+const SHARED_FOLDER_NAME = "My Adventures";
 
 /** Fixed, predictable pack name so re-running the wizard reuses the same pack rather than making a new one each time. */
 const PORTABLE_PACK_NAME = "cv-pseudo-portable-campaign";
@@ -98,10 +58,10 @@ function slugify(text) {
 
 /**
  * Walks a GM through turning their campaign into a real, portable Foundry module: why it's worth
- * doing now, picking what belongs to it (via Tagger tags already in use), building it into a native
- * Adventure using Foundry's own Adventure Pack/Builder, and generating the module.json needed to
- * package it as a standalone, installable module — handing off to the Setup screen only for the one
- * step that genuinely requires it (a running World can't create a new package for itself).
+ * doing now, building it into a native Adventure using Foundry's own Adventure Pack/Builder, and
+ * generating the module.json needed to package it as a standalone, installable module — then a plain
+ * checklist (not another wizard step) for the parts that genuinely can't happen from inside a running
+ * World: installing the new package, and copying the Adventure's data on disk.
  */
 export class CampaignPortableWizard extends HandlebarsApplicationMixin(ApplicationV2) {
   /** @type {CampaignPortableWizard|null} */
@@ -110,14 +70,8 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   /** @type {number} Index into STEPS. */
   #stepIndex = 0;
 
-  /** @type {Set<string>} Tags the GM has picked as belonging to this campaign. */
-  #selectedTags = new Set();
-
-  /** @type {?Array} Cached scan result, computed once per wizard open (tags don't change mid-flow). */
-  #tagGroups = null;
-
-  /** @type {string} Draft name for the Adventure/eventual module, defaults to the World's title. */
-  #campaignName = game.world.title;
+  /** @type {string} Draft name for the Adventure/eventual module. */
+  #campaignName = "First Campaign";
 
   /** @type {?Adventure} The Adventure document once created. */
   #adventure = null;
@@ -131,7 +85,7 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   /** @type {boolean} True while the module-folder scaffold is being created/refreshed on disk. */
   #settingUpModule = false;
 
-  /** @type {?boolean} Cached "does modules/<id>/module.json exist" check, refreshed each Handoff render. */
+  /** @type {?boolean} Cached "does modules/<id>/module.json exist" check, refreshed each render of the final step. */
   #moduleFolderReady = null;
 
   /** @type {boolean} Self-reported by the GM: "I've copied the Adventure pack's data folder in." */
@@ -185,9 +139,10 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   /** @override */
   async _prepareContext(_options) {
     const step = this.#step;
-    if (step === "select" && !this.#tagGroups) this.#tagGroups = scanTagGroups();
-    if (step === "module" && !this.#moduleId) this.#moduleId = slugify(this.#campaignName);
-    if (step === "handoff") this.#moduleFolderReady = await this.#checkModuleFolder();
+    if (step === "module") {
+      if (!this.#moduleId) this.#moduleId = slugify(this.#campaignName);
+      this.#moduleFolderReady = await this.#checkModuleFolder();
+    }
 
     const { packName } = this.#packInfo();
 
@@ -195,24 +150,12 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
       moduleName: MODULE_NAME,
       step,
       isPitch: step === "pitch",
-      isSelect: step === "select",
       isAdventure: step === "adventure",
       isModule: step === "module",
-      isHandoff: step === "handoff",
       stepNumber: this.#stepIndex + 1,
       totalSteps: STEPS.length,
       canBack: this.#stepIndex > 0,
-      taggerActive: game.modules.get("tagger")?.active ?? false,
-      tagGroups: (this.#tagGroups ?? []).map((g) => ({
-        ...g,
-        selected: this.#selectedTags.has(g.tag),
-        summary: g.byType.map((t) => `${t.count} ${t.label}${t.count === 1 ? "" : "s"}`).join(", ")
-      })),
-      hasTagGroups: (this.#tagGroups ?? []).length > 0,
-      selectedCount: this.#selectedTags.size,
       campaignName: this.#campaignName,
-      tagPreview: this.#selectedTags.size ? [...this.#selectedTags].join(", ") : null,
-      matchPreview: this.#matchPreviewText(),
       creatingAdventure: this.#creatingAdventure,
       hasAdventure: Boolean(this.#adventure),
       adventureName: this.#adventure?.name ?? "",
@@ -232,7 +175,7 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
 
   /**
    * The Adventure pack's collection name and game system id, used both for the manifest and the
-   * Handoff step's on-disk paths.
+   * final step's on-disk paths.
    * @returns {{packName: string, packSystem: ?string}}
    */
   #packInfo() {
@@ -265,12 +208,12 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
           ...(packSystem ? { system: packSystem } : {})
         }
       ],
-      // Groups the pack under a named folder in the Compendium sidebar tab on install, instead of it
-      // sitting as a bare, easy-to-lose entry among every other installed pack — the more content
-      // this ever grows to hold, the more this pays for itself.
+      // Fixed folder name (see SHARED_FOLDER_NAME) — every campaign this wizard ever exports pools
+      // into the same Compendium-sidebar folder, instead of each getting its own same-named-as-itself
+      // folder holding a single pack.
       packFolders: [
         {
-          name: this.#campaignName,
+          name: SHARED_FOLDER_NAME,
           packs: [packName]
         }
       ]
@@ -278,7 +221,7 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   }
 
   /**
-   * Check whether modules/<id>/module.json already exists on disk — the Handoff step's live status.
+   * Check whether modules/<id>/module.json already exists on disk — the final step's live status.
    * @returns {Promise<boolean>}
    */
   async #checkModuleFolder() {
@@ -289,19 +232,6 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
     } catch {
       return false;
     }
-  }
-
-  /**
-   * A quick "what will be included" preview for Step 3, before the Adventure actually exists.
-   * @returns {string}
-   */
-  #matchPreviewText() {
-    if (!this.#selectedTags.size) return "Nothing pre-selected — you'll add content by hand in the Adventure Builder.";
-    const matched = collectTaggedDocuments(this.#selectedTags);
-    const total = Object.values(matched).reduce((sum, docs) => sum + docs.length, 0);
-    if (!total) return "Nothing pre-selected — you'll add content by hand in the Adventure Builder.";
-    const parts = Object.entries(matched).map(([field, docs]) => `${docs.length} ${SCAN_COLLECTIONS[field].label}${docs.length === 1 ? "" : "s"}`);
-    return `Will start with: ${parts.join(", ")}.`;
   }
 
   /**
@@ -322,18 +252,6 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
   async _onRender(context, options) {
     await super._onRender(context, options);
     applyColorScheme(this.element);
-
-    // Live-update the "N tag(s) selected" hint on click, rather than only after the next full
-    // render (navigating away and back) — a full re-render per checkbox would be needless flicker.
-    const hint = this.element.querySelector(".cvp-wizard-hint");
-    if (hint) {
-      this.element.querySelectorAll('input[name="campaignTag"]').forEach((el) => {
-        el.addEventListener("change", () => {
-          const count = this.element.querySelectorAll('input[name="campaignTag"]:checked').length;
-          hint.textContent = `${count} tag(s) selected. Leave everything unchecked to skip straight to manual selection.`;
-        });
-      });
-    }
 
     // Live-update the generated module.json preview as the module id is edited, rather than only
     // reflecting it after navigating away and back.
@@ -371,15 +289,10 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
 
   /** @this {CampaignPortableWizard} */
   static async #onNext() {
-    if (this.#step === "select") {
-      const checked = this.element.querySelectorAll('input[name="campaignTag"]:checked');
-      this.#selectedTags = new Set([...checked].map((el) => el.value));
-    } else if (this.#step === "adventure") {
+    if (this.#step === "adventure") {
       const nameInput = this.element.querySelector(".cvp-wizard-campaign-name");
       if (nameInput?.value?.trim()) this.#campaignName = nameInput.value.trim();
       if (!this.#adventure && !(await this.#confirmSkipAdventure())) return;
-    } else if (this.#step === "module") {
-      this.#captureModuleId();
     }
     this.#stepIndex = Math.min(this.#stepIndex + 1, STEPS.length - 1);
     this.render();
@@ -426,11 +339,7 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
 
     try {
       const pack = await getOrCreatePortablePack();
-      const matched = collectTaggedDocuments(this.#selectedTags);
-      const createData = { name: this.#campaignName };
-      for (const [field, docs] of Object.entries(matched)) createData[field] = docs.map((d) => d.toObject());
-
-      this.#adventure = await Adventure.create(createData, { pack: pack.collection });
+      this.#adventure = await Adventure.create({ name: this.#campaignName }, { pack: pack.collection });
       new foundry.applications.sheets.AdventureExporter({ document: this.#adventure }).render(true);
       log(`created portable-campaign Adventure "${this.#campaignName}" in ${pack.collection}`);
     } catch (err) {

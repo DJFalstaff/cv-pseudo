@@ -942,41 +942,6 @@
   margin: 0;
 }
 
-.cvp-wizard-tag-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  max-height: 260px;
-  overflow-y: auto;
-  padding-right: 0.3rem;
-}
-
-.cvp-wizard-tag-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.7rem;
-  border: 1px solid var(--cvp-border);
-  border-radius: 8px;
-  background: var(--cvp-panel);
-  cursor: pointer;
-}
-
-.cvp-wizard-tag-row:hover {
-  border-color: var(--cvp-accent);
-}
-
-.cvp-wizard-tag-name {
-  font-weight: 600;
-  flex: 1 1 auto;
-}
-
-.cvp-wizard-tag-summary {
-  font-size: 0.8rem;
-  color: var(--cvp-muted);
-  flex: 0 0 auto;
-}
-
 .cvp-wizard-hint {
   font-size: 0.8rem;
   color: var(--cvp-muted);
@@ -1010,7 +975,7 @@
   margin-bottom: 0.75rem;
 }
 
-.cvp-wizard-handoff-task h3 {
+.cvp-wizard-handoff-task h4 {
   margin: 0 0 0.4rem;
   font-size: 0.95rem;
 }

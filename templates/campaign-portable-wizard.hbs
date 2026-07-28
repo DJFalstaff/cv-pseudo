@@ -26,63 +26,10 @@
       accurately at all.
     </p>
     <p>
-      This wizard won't do it all invisibly — there's one step near the end where Foundry itself
-      requires you to visit the Setup screen, since a running World can't install a new package into
-      itself. But everything else, including figuring out <em>what</em> belongs in the package, is
-      handled here.
+      This wizard handles building the Adventure and generating its module.json. The last step is
+      honest about the rest: installing the new package and copying its data both genuinely have to
+      happen outside a running World, so that step is a plain checklist, not more wizard automation.
     </p>
-  </div>
-  {{/if}}
-
-  {{#if isSelect}}
-  <div class="cvp-wizard-step cvp-wizard-select">
-    <h2>What belongs in this campaign?</h2>
-    <p>
-      This step checks whether you have <strong>Tagger</strong> installed — a free, separate
-      <em>add-on module</em>, not something built into Foundry itself. Like any module, it has to be
-      installed and enabled on its own (from the Add-on Modules tab on Foundry's Setup screen) before
-      it does anything. If it's there and active, this wizard reads the tags you've already applied
-      to your scenes, actors, items, and journals with it, and uses them to guess what belongs to this
-      campaign — so you don't have to pick everything by hand in the next step. If it's not installed,
-      that's completely fine; it's an optional shortcut, not a requirement, and you'll just do that
-      picking by hand instead.
-    </p>
-
-    {{#if taggerActive}}
-      {{#if hasTagGroups}}
-      <p>
-        Tagger is installed and active, and it already found tags applied in this World. Pick the tag
-        (or tags) below that represent this campaign — everything carrying them becomes the starting
-        point for the Adventure in the next step. You'll still be able to add or remove individual
-        pieces there by hand.
-      </p>
-      <div class="cvp-wizard-tag-list">
-        {{#each tagGroups as |group|}}
-        <label class="cvp-wizard-tag-row">
-          <input type="checkbox" name="campaignTag" value="{{group.tag}}" {{#if group.selected}}checked{{/if}}>
-          <span class="cvp-wizard-tag-name">{{group.tag}}</span>
-          <span class="cvp-wizard-tag-summary">{{group.summary}}</span>
-        </label>
-        {{/each}}
-      </div>
-      <p class="cvp-wizard-hint">{{selectedCount}} tag(s) selected. Leave everything unchecked to skip straight to manual selection.</p>
-      {{else}}
-      <p>
-        Tagger is installed and active, but nothing in this World has been tagged yet — so there's
-        nothing for it to hand this wizard automatically. That's fine: you'll pick content by hand in
-        the next step instead. (Tagging things with Tagger first, then re-running this wizard, makes
-        future updates to this module faster — but it's entirely optional.)
-      </p>
-      {{/if}}
-    {{else}}
-    <p>
-      Tagger isn't installed (or isn't enabled) in this World right now, so there's nothing for this
-      wizard to read automatically — you'll pick everything by hand in the next step instead, which
-      works just as well. If you'd like this step to do the grouping for you next time, install
-      <strong>Tagger</strong> from the Add-on Modules tab on Foundry's Setup screen, enable it for this
-      World, tag your content with it, and re-run this wizard.
-    </p>
-    {{/if}}
   </div>
   {{/if}}
 
@@ -92,8 +39,7 @@
     <p>
       This is where your campaign actually becomes something packageable — a real Foundry
       <strong>Adventure</strong> document that holds the content. Nothing gets bundled unless you
-      create it here, and even after you do, nothing is added to it automatically unless you selected
-      tags in the previous step.
+      create it here, and it starts empty — you add everything by hand in the next part.
     </p>
     <div class="form-group">
       <label>Campaign name</label>
@@ -101,7 +47,6 @@
     </div>
 
     {{#unless hasAdventure}}
-    <p class="cvp-wizard-hint">{{matchPreview}}</p>
     <button type="button" data-action="createAdventure" class="cvp-wizard-btn cvp-wizard-btn--primary" {{#if creatingAdventure}}disabled{{/if}}>
       {{#if creatingAdventure}}Creating…{{else}}Create Adventure{{/if}}
     </button>
@@ -117,9 +62,7 @@
       Playlists) one at a time, and drag each entry you want in this campaign onto the Contents tab.
       Go through everything you want this campaign to include: every actor (PCs and the important
       NPCs/monsters), item, scene or map, journal entry (including handouts and lore), roll table,
-      macro, card deck, and playlist. If you selected tags in the last step, those matches were already
-      dragged in for you — it's still worth checking the Contents tab and adding anything that got
-      missed, or that you never tagged.
+      macro, card deck, and playlist.
     </p>
     <p>
       Take your time here — this is the step that decides what actually ships. You can close this
@@ -133,36 +76,25 @@
 
   {{#if isModule}}
   <div class="cvp-wizard-step cvp-wizard-module">
-    <h2>Generate the module</h2>
+    <h2>Generate &amp; Install the Module</h2>
 
     {{#unless hasAdventure}}
     <p>Go back and create the Adventure in the previous step first — there's nothing to package yet.</p>
     {{else}}
+
     <div class="form-group">
       <label>Module id</label>
       <input type="text" class="cvp-wizard-module-id" value="{{moduleId}}">
       <p class="cvp-wizard-hint">Lowercase, hyphenated, no spaces — this becomes the module's folder name.</p>
     </div>
     <p>
-      This is the <code>module.json</code> for a standalone module wrapping "{{adventureName}}". Copy or
-      download it now — the next step covers exactly where it (and the Adventure pack's data) need to go.
+      This is the <code>module.json</code> for a standalone module wrapping "{{adventureName}}".
     </p>
     <pre class="cvp-wizard-manifest-preview">{{manifestText}}</pre>
     <div class="cvp-wizard-manifest-actions">
       <button type="button" data-action="copyManifest" class="cvp-wizard-btn">Copy</button>
       <button type="button" data-action="downloadManifest" class="cvp-wizard-btn">Download module.json</button>
     </div>
-    {{/unless}}
-  </div>
-  {{/if}}
-
-  {{#if isHandoff}}
-  <div class="cvp-wizard-step cvp-wizard-handoff">
-    <h2>Finish it on the Setup screen</h2>
-
-    {{#unless hasAdventure}}
-    <p>Go back and create the Adventure first — there's nothing to hand off yet.</p>
-    {{else}}
 
     {{#if moduleActive}}
     <p class="cvp-wizard-success">
@@ -172,18 +104,19 @@
     <button type="button" data-action="finish" class="cvp-wizard-btn cvp-wizard-btn--primary">Finish</button>
     {{else}}
 
+    <h3>What's left</h3>
     <p>
       Two things need to happen. The wizard can do the first one for you; the second genuinely has to
       happen outside Foundry, on disk.
     </p>
 
     <div class="cvp-wizard-handoff-task">
-      <h3>1. The module folder itself</h3>
+      <h4>1. The module folder itself</h4>
       {{#if moduleFolderReady}}
       <p class="cvp-wizard-hint">✓ <code>{{targetModulePath}}/module.json</code> already exists.</p>
       {{else}}
       <p>Creates <code>{{targetModulePath}}/</code> and writes <code>module.json</code> into it — the
-        same content from the last step.</p>
+        same content shown above.</p>
       {{/if}}
       <button type="button" data-action="setupModuleFolder" class="cvp-wizard-btn" {{#if settingUpModule}}disabled{{/if}}>
         {{#if settingUpModule}}Working…{{else}}{{#if moduleFolderReady}}Refresh module.json{{else}}Set up the module folder{{/if}}{{/if}}
@@ -191,7 +124,7 @@
     </div>
 
     <div class="cvp-wizard-handoff-task">
-      <h3>2. The Adventure's data (can't be done from in here)</h3>
+      <h4>2. The Adventure's data (can't be done from in here)</h4>
       <p>
         Using your OS file browser — not Foundry — copy the <strong>entire folder</strong>, every file
         in it, including the ones without a file extension:
@@ -207,7 +140,7 @@
     </div>
 
     <div class="cvp-wizard-handoff-task">
-      <h3>3. Tell Foundry about it</h3>
+      <h4>3. Tell Foundry about it</h4>
       <p>
         Open the <strong>Settings</strong> tab in the sidebar and click <strong>Return to Setup</strong>.
         In Module Management, find "{{campaignName}}", enable it for this World, then relaunch. Come
@@ -228,7 +161,7 @@
     {{#if canBack}}
     <button type="button" data-action="back" class="cvp-wizard-btn">Back</button>
     {{/if}}
-    {{#unless isHandoff}}
+    {{#unless isModule}}
     <button type="button" data-action="next" class="cvp-wizard-btn cvp-wizard-btn--primary">
       {{#if isPitch}}Get Started{{else}}Next{{/if}}
     </button>
