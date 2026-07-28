@@ -60,13 +60,15 @@ export function registerSettings() {
     type: new BooleanField({ initial: false })
   });
 
-  // Per-user UI preference, so it is NOT restricted — players use the assistant window too.
+  // Per-user UI preference, so it is NOT restricted — players use the assistant window too. Defaults
+  // off: keeping a chat window pinned above everything else causes real problems in some workflows
+  // (blocking dialogs/sheets it shouldn't) and is only actively wanted in others — better to opt in.
   game.settings.register(MODULE_ID, SETTINGS.KEEP_ON_TOP, {
     name: "CVP.Settings.KeepOnTop.Name",
     hint: "CVP.Settings.KeepOnTop.Hint",
     scope: "client",
     config: true,
-    type: new BooleanField({ initial: true })
+    type: new BooleanField({ initial: false })
   });
 
   game.settings.register(MODULE_ID, SETTINGS.WINDOW_POSITION, {
