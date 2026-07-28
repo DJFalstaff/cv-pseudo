@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.4 — 2026-07-28
+- Fixed the Back/Next buttons getting pushed out of view on long wizard steps (e.g. the dnd5e settings wizard's Combat & Initiative step). The step content now scrolls independently of a fixed nav footer, instead of the whole window scrolling as one unit.
+
 ## v14.9.3 — 2026-07-28
 - Centered the empty-state logo image (it was rendering flush-left since Foundry's own CSS resets `img` to `display: block`, so the parent's `text-align: center` had no effect on it).
 - "Keep assistant on top" now defaults off instead of on.

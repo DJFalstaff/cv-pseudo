@@ -844,6 +844,20 @@
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
+  height: 100%;
+  min-height: 0;
+}
+
+/* Scrolls independently of .cvp-wizard-nav below, so Back/Next stay reachable without scrolling
+ * past a long step's content — the window itself has a fixed height, and without this split, a
+ * tall step (e.g. a dense settings list) pushes the nav buttons out of view. */
+.cvp-wizard-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
 }
 
 .cvp-wizard-progress {
@@ -872,6 +886,7 @@
 
 .cvp-wizard-nav {
   display: flex;
+  flex: 0 0 auto;
   justify-content: flex-end;
   gap: 0.6rem;
   padding-top: 0.4rem;
