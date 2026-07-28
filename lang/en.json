@@ -18,6 +18,7 @@
 
   "CVP.Settings.Summon.Label": "Summon Pseudo",
   "CVP.Settings.OpenSetup.Label": "Pseudo Setup",
+  "CVP.Settings.OpenSetup.Hint": "Walks you through connecting Pseudo to an AI provider, step by step.",
 
   "CVP.Settings.KeepOnTop.Name": "Keep assistant on top",
   "CVP.Settings.KeepOnTop.Hint": "Keep Pseudo's window above your other windows so it stays visible while you work. Turn off if you'd rather it sit in the normal window stack.",
@@ -111,6 +112,7 @@
 
   "CVP.Trouble.Title": "Pseudo Troubleshooter",
   "CVP.Trouble.Button": "Pseudo Troubleshooter",
+  "CVP.Trouble.MenuHint": "A diagnostic snapshot of your setup, dependency health, and active modules — for when something isn't working.",
   "CVP.Trouble.Notes": "A diagnostic snapshot of your setup — Foundry, Pseudo's config, dependency health, and active modules. Copy or export it when asking for help. It does not include your API key.",
   "CVP.Trouble.OutputLabel": "Diagnostic report",
   "CVP.Trouble.Diagnose": "Diagnose it for me",

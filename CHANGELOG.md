@@ -2,6 +2,10 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.8.0 — 2026-07-28
+- Moved "Summon Pseudo" from the Settings sidebar to its own button on the left scene-control toolbar, directly under Notes.
+- Moved "Pseudo Setup" and "Pseudo Troubleshooter" into Pseudo's own section in Configure Settings (as proper settings-menu buttons), instead of loose buttons bolted onto the whole Settings sidebar tab.
+
 ## v14.7.2 — 2026-07-28
 - Fixed the recommended-settings dialog: chat bubbles and pan-to-speaker are now correctly recommended OFF (they were backwards, recommending ON).
 
