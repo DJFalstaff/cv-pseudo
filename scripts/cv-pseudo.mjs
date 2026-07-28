@@ -133,6 +133,31 @@ Hooks.on("renderSettingsConfig", (_app, html) => {
 });
 
 /**
+ * The last active control layer/tool that *wasn't* Pseudo's own button group, tracked so clicking
+ * Pseudo can hand control back to it immediately afterward — see releasePseudoControl() below.
+ * @type {{layer: string, tool: ?string}}
+ */
+let lastRealControl = { layer: "tokens", tool: "select" };
+
+Hooks.on("renderSceneControls", (app) => {
+  if (app.control?.name && app.control.name !== "pseudo") {
+    lastRealControl = { layer: app.control.name, tool: app.tool?.name ?? null };
+  }
+});
+
+/**
+ * Snap the scene-control toolbar back to whatever was active before Pseudo's button fired. `button:
+ * true` only changes click behavior (fire immediately vs. requiring a sub-tool pick) — Foundry still
+ * records the group itself as `ui.controls.control` afterward, same as Token/Notes/etc. Left alone,
+ * that means the *next* control the GM clicks re-syncs through "pseudo" as the outgoing control and
+ * replays this group's onChange, silently reopening a window the GM had already closed.
+ * @returns {void}
+ */
+function releasePseudoControl() {
+  ui.controls.initialize(lastRealControl);
+}
+
+/**
  * Add a "Summon Pseudo" button group to the left scene-control toolbar, directly under the Notes
  * group — reachable without remembering the hotkey. GM-only, matching who could see the old
  * Settings-sidebar button.
@@ -149,7 +174,9 @@ Hooks.on("getSceneControlButtons", (controls) => {
     button: true,
     order: 9, // directly after "notes" (order 8)
     onChange: (_event, active) => {
-      if (active) AssistantDialog.toggle();
+      if (!active) return;
+      AssistantDialog.toggle();
+      releasePseudoControl();
     },
     tools: {
       summon: {
@@ -158,7 +185,10 @@ Hooks.on("getSceneControlButtons", (controls) => {
         icon: "fa-solid fa-dragon",
         button: true,
         order: 1,
-        onChange: () => AssistantDialog.toggle()
+        onChange: () => {
+          AssistantDialog.toggle();
+          releasePseudoControl();
+        }
       }
     },
     activeTool: "summon"

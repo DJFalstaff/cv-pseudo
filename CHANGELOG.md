@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.6 — 2026-07-28
+- Fixed the Summon Pseudo toolbar button silently reopening the chat window after it was closed, whenever the GM clicked a different left-toolbar tool next. Foundry tracked Pseudo's button group as the persistent "active control" after it fired, so switching to any other tool replayed it; now it hands control back to whatever was active before immediately after firing.
+
 ## v14.9.5 — 2026-07-28
 - The dnd5e settings wizard's closing step now explains the actual Bastion settings (Loyalty Score, Enable Bastion Functionality, Show Bastion Turn Button, Bastion Turn Duration) with the same "reasons to change it" detail as every other step, instead of a one-line pointer to the dialog.
 
