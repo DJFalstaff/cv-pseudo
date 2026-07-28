@@ -28,6 +28,14 @@ is deleted or rebuilt, and they don't carry over to a different World or a fresh
 For anything worth keeping long-term — a signature dice look for a campaign, a backup before
 experimenting, or a set to reuse across different Worlds — use **Export all** instead (or **Export
 Special effects** / **Export my Dice Library** for just those pieces). This downloads a real file to
-the GM's own computer. Store that file somewhere durable, the same place other campaign backups live
-(not just relying on it staying inside this one World) — it can be brought back anytime with
-**Import**, in this World or any other.
+the GM's own computer, and **Import** reads it back the same way — a normal browser "choose a file"
+dialog, not Foundry's own file browser. The exported file never has to touch Foundry at all.
+
+**Where to actually put it:** don't upload it into a module folder, a World folder, or anywhere else
+under Foundry's own `Data/` folder to keep it "inside Foundry." Foundry serves everything under
+`Data/` as plain static files with no permission check — that's exactly how player-visible art and
+tokens load in the first place — so anything stored there is fetchable by anyone who has (or guesses)
+the path, GM or player. Keep the exported file on the GM's own computer instead, in whatever folder
+already holds other real backups — Documents, a synced Drive/Dropbox folder, wherever. It's simpler,
+genuinely private since it never reaches the server, and safe from a module update or World deletion.
+Bring it back anytime with **Import**'s own file picker, in this World or any other.

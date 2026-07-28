@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.7 — 2026-07-28
+- Clarified the Dice So Nice knowledge doc's "keeping a look safe" advice: don't store an exported preset file inside Foundry's `Data/` folder (module or World folders included) — everything there is served as plain static files with no permission check, so it's fetchable by players too. Keep it on the GM's own computer instead; Import reads it back via a normal file picker, not Foundry's Data browser.
+
 ## v14.9.6 — 2026-07-28
 - Fixed the Summon Pseudo toolbar button silently reopening the chat window after it was closed, whenever the GM clicked a different left-toolbar tool next. Foundry tracked Pseudo's button group as the persistent "active control" after it fired, so switching to any other tool replayed it; now it hands control back to whatever was active before immediately after firing.
 
