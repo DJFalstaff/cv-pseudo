@@ -2,6 +2,9 @@
 
 All notable changes to Pseudo are documented here, newest first.
 
+## v14.9.1 — 2026-07-28
+- Embedded a tutorial video on Adventure compendiums in the wizard's "Build the Adventure" step.
+
 ## v14.9.0 — 2026-07-28
 - Cut the Campaign Portability Wizard from 5 steps to 3. Removed the Tagger-based "smart selection" step entirely — it assumed Tagger tags are used as broad content-categorization labels, but in practice they're scoped, single-purpose automation identifiers (e.g. for Monk's Active Tile Triggers), so the step surfaced tags that didn't map to anything meaningful.
 - Merged "Generate the Module" and "Finish it on the Setup screen" into one final screen — a plain checklist for the parts that genuinely can't happen from inside a running World, instead of a wizard step implying more automation than it can deliver.

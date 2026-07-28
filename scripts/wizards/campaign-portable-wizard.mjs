@@ -24,6 +24,14 @@ const SCAN_COLLECTIONS = {
  * instead of each getting its own same-named-as-itself folder holding a single pack. */
 const SHARED_FOLDER_NAME = "My Adventures";
 
+/** A GM-picked tutorial on Adventure compendiums, embedded on the Build step — verified real via
+ * YouTube's oEmbed endpoint before adding. */
+const ADVENTURE_VIDEO = {
+  id: "vhCpJPTMYXQ",
+  title: 'FoundryVTT Basics: Easily "Reset" Adventures and Prep in Advance With Adventure Compendiums',
+  author: "Baileywiki"
+};
+
 /** Fixed, predictable pack name so re-running the wizard reuses the same pack rather than making a new one each time. */
 const PORTABLE_PACK_NAME = "cv-pseudo-portable-campaign";
 
@@ -152,6 +160,7 @@ export class CampaignPortableWizard extends HandlebarsApplicationMixin(Applicati
       isPitch: step === "pitch",
       isAdventure: step === "adventure",
       isModule: step === "module",
+      adventureVideo: ADVENTURE_VIDEO,
       stepNumber: this.#stepIndex + 1,
       totalSteps: STEPS.length,
       canBack: this.#stepIndex > 0,

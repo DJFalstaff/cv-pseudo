@@ -41,6 +41,14 @@
       <strong>Adventure</strong> document that holds the content. Nothing gets bundled unless you
       create it here, and it starts empty — you add everything by hand in the next part.
     </p>
+
+    <div class="cvp-video">
+      <iframe src="https://www.youtube.com/embed/{{adventureVideo.id}}" title="{{adventureVideo.title}}"
+              loading="lazy" allowfullscreen
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe>
+    </div>
+    <div class="cvp-video-meta">{{adventureVideo.title}} — {{adventureVideo.author}}</div>
+
     <div class="form-group">
       <label>Campaign name</label>
       <input type="text" class="cvp-wizard-campaign-name" value="{{campaignName}}">
