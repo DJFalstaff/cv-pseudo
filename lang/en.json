@@ -101,6 +101,12 @@
   "CVP.Omni.NotNow": "Not now",
   "CVP.Omni.Done": "Omnisearch tuned — Pseudo can now search your compendiums and rules.",
 
+  "CVP.CoreSettings.Title": "A few table settings worth changing",
+  "CVP.CoreSettings.Body": "Pseudo noticed a few Foundry display settings aren't at the values most tables prefer: turning off automatic token rotation and roll table animations (both apply to everyone at the table), and turning on chat bubbles, pan-to-speaker, and left-click-to-release objects (these only apply to your own view — players would need to enable them for themselves). Apply these now? (You can change any of them later in Foundry's Configure Settings.)",
+  "CVP.CoreSettings.Enable": "Apply recommended settings",
+  "CVP.CoreSettings.NotNow": "Not now",
+  "CVP.CoreSettings.Done": "Settings updated.",
+
   "CVP.Trouble.Title": "Pseudo Troubleshooter",
   "CVP.Trouble.Button": "Pseudo Troubleshooter",
   "CVP.Trouble.Notes": "A diagnostic snapshot of your setup — Foundry, Pseudo's config, dependency health, and active modules. Copy or export it when asking for help. It does not include your API key.",

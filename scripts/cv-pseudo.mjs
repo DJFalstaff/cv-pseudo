@@ -4,6 +4,7 @@ import { registerRelay } from "./llm/relay.mjs";
 import { AssistantDialog } from "./assistant/assistant-dialog.mjs";
 import { SetupWizard } from "./setup/setup-wizard.mjs";
 import { maybePromptOmnisearchTuning, applyOmnisearchSettings } from "./setup/omnisearch-tuning.mjs";
+import { maybePromptCoreSettingsTuning, applyCoreSettings } from "./setup/core-settings-tuning.mjs";
 import { Troubleshooter } from "./setup/troubleshooter.mjs";
 import { captureSelector, highlightByKey } from "./ui/highlight.mjs";
 
@@ -52,6 +53,7 @@ Hooks.once("ready", () => {
     setup: () => SetupWizard.open(),
     troubleshooter: () => Troubleshooter.open(),
     tuneOmnisearch: () => applyOmnisearchSettings(),
+    tuneCoreSettings: () => applyCoreSettings(),
     isConfigured,
     // Dev helpers for building the UI map: click to capture a selector, or test a key.
     captureSelector,
@@ -63,7 +65,10 @@ Hooks.once("ready", () => {
   // First-run: greet an unconfigured GM with the key walkthrough. Once they're set up, nudge them to
   // tune Omnisearch for the best search results.
   SetupWizard.maybeGreet();
-  if (isConfigured()) maybePromptOmnisearchTuning();
+  if (isConfigured()) {
+    maybePromptOmnisearchTuning();
+    maybePromptCoreSettingsTuning();
+  }
 });
 
 /**

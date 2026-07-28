@@ -50,6 +50,8 @@ export const SETTINGS = {
   WINDOW_POSITION: "windowPosition",
   /** Set once the GM answers the "tune Omnisearch for best results" prompt. */
   OMNISEARCH_DISMISSED: "omnisearchDismissed",
+  /** Set once the GM answers the "tune core Foundry display settings" prompt. */
+  CORE_SETTINGS_DISMISSED: "coreSettingsDismissed",
   /** Press → in the empty input to fill it with the shown example prompt. Per-user UI preference. */
   EXAMPLE_AUTOFILL: "exampleAutofill"
 };

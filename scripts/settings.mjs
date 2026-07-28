@@ -81,6 +81,12 @@ export function registerSettings() {
     type: new BooleanField({ initial: false })
   });
 
+  game.settings.register(MODULE_ID, SETTINGS.CORE_SETTINGS_DISMISSED, {
+    scope: "client",
+    config: false,
+    type: new BooleanField({ initial: false })
+  });
+
   // Per-user UI preference, so it is NOT restricted — players use the assistant window too.
   game.settings.register(MODULE_ID, SETTINGS.EXAMPLE_AUTOFILL, {
     name: "CVP.Settings.ExampleAutofill.Name",
