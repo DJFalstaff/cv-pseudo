@@ -15,6 +15,11 @@ export const COMMANDS = [
     name: "/pseudo",
     aliases: [],
     description: "Learn about Pseudo itself and its settings."
+  },
+  {
+    name: "/clear",
+    aliases: [],
+    description: "Clear this chat window."
   }
 ];
 

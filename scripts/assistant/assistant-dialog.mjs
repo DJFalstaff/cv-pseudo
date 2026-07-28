@@ -619,6 +619,16 @@ export class AssistantDialog extends HandlebarsApplicationMixin(ApplicationV2) {
     const prompt = input?.value?.trim();
     if (!prompt) return;
 
+    // /clear wipes the window rather than adding to it, so it's intercepted before the GM's own line
+    // gets echoed — there'd be nothing left to show it alongside anyway.
+    if (matchCommand(prompt)?.name === "/clear") {
+      input.value = "";
+      this.#updateGhostCompletion(input);
+      this.#transcript = [];
+      this.render();
+      return;
+    }
+
     this.#push("gm", prompt);
     input.value = "";
     this.#updateGhostCompletion(input);
