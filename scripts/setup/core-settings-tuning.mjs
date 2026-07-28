@@ -10,8 +10,8 @@ import { MODULE_ID, SETTINGS, log } from "../constants.mjs";
 const RECOMMENDED = {
   tokenAutoRotate: false,
   animateRollTable: false,
-  chatBubbles: true,
-  chatBubblesPan: true,
+  chatBubbles: false,
+  chatBubblesPan: false,
   leftClickRelease: true
 };
 
